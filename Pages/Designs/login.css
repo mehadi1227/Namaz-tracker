@@ -1,0 +1,95 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:  #FFFFFF;
+}
+
+.formContainer {
+    max-width: 520px;
+    background-color: #F5F7FA;
+    border: 1px solid #E5E7EB;
+    border-radius: 5px;
+    padding: 5px 0;
+    text-align: center;
+}
+
+.formContainer h1,
+.formContainer h3 {
+    font-size: 1.8rem;
+    color: #111827;
+    margin: 10px;
+}
+
+.formContainer form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0px 10px 0 10px;
+}
+
+.formContainer form input[type='text'],
+.formContainer form input[type='password'] {
+    width: 100;
+    padding: 10px;
+    outline: 1px solid #D1D5DB;
+    margin: 2px;
+    border: none;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+
+}
+
+.formContainer form input[placeholder] {
+    color: #9CA3AF;
+}
+
+.formContainer form div {
+    display: flex;
+    justify-content: space-between;
+    margin: 2px 0px;
+    padding: 0px 2px;
+}
+
+.formContainer form div label {
+    color: #6B7280;
+}
+
+.formContainer form div label a {
+    color: #3B82F6;
+    font-weight: 300;
+    text-decoration: none;
+}
+
+.formContainer form input[type='submit'] {
+    width: 100;
+    padding: 5px;
+    margin: 15px;
+    border: none;
+    border-radius: 15px;
+    background-color: #4B5563;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.formContainer form input[type='submit']:hover{
+    background-color: #374151;
+}
+
+.formContainer form label {
+    color: #6B7280;
+}
+
+.formContainer form label a {
+    color: #3B82F6;
+    font-weight: 300;
+    text-decoration: none;
+}
