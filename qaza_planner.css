@@ -1,0 +1,341 @@
+:root {
+    --bg: #f3f4f6;
+    --card-bg: #ffffff;
+    --primary: #22c55e;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --danger: #dc2626;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.page-wrapper {
+    min-height: 100vh;
+    padding: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.main-card {
+    background: var(--card-bg);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    padding: 24px 24px 28px;
+    width: 100%;
+    max-width: 1100px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.disclaimer {
+    margin: 10px 0 18px;
+    font-size: 13px;
+    color: var(--danger);
+}
+
+/* grid */
+
+.qaza-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.3fr);
+    gap: 24px;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 20px 22px;
+}
+
+.card h2 {
+    margin: 0 0 16px;
+    font-size: 18px;
+}
+
+/* left card */
+
+.small-label {
+    font-size: 14px;
+    color: var(--muted);
+    margin: 0 0 6px;
+}
+
+.filters-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+    align-items: center;
+}
+
+.filters-row select {
+    flex: 1;
+}
+
+select,
+input[type="number"] {
+    padding: 7px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 14px;
+    background: #ffffff;
+}
+
+/* Filter apply button */
+
+.filter-apply-btn {
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: #f3f4f6;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.filter-apply-btn:hover {
+    background: #e5e7eb;
+}
+
+/* table */
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.qaza-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.qaza-table th,
+.qaza-table td {
+    text-align: left;
+    padding: 9px 10px;
+}
+
+.qaza-table thead th {
+    color: var(--muted);
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+}
+
+.qaza-table tbody tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+.qaza-table tbody td {
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.qaza-table .empty-row {
+    text-align: center;
+    color: var(--muted);
+}
+
+/* status cell with row apply button */
+
+.status-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-cell select {
+    flex: 1;
+}
+
+.row-apply-btn {
+    padding: 5px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: #f3f4f6;
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.row-apply-btn:hover {
+    background: #e5e7eb;
+}
+
+/* right card: plan */
+
+.plan-top {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pending-text {
+    margin: 0;
+    font-size: 15px;
+    color: var(--text);
+}
+
+.pending-number {
+    font-weight: 600;
+}
+
+.finish-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.finish-row label {
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.finish-row select {
+    width: 100%;
+}
+
+/* quick buttons */
+
+.quick-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.quick-btn {
+    flex: 1;
+    padding: 7px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #ffffff;
+    color: var(--text);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.quick-btn:hover {
+    background: #f3f4f6;
+}
+
+.quick-btn.active {
+    border-color: #9ca3af;
+    background: #e5e7eb;
+}
+
+/* custom days row */
+
+.custom-days {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.custom-days.show {
+    display: flex;
+}
+
+.custom-days label {
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.custom-days input {
+    width: 90px;
+}
+
+.small-submit {
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: #f3f4f6;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+/* main plan text */
+
+.plan-main-text {
+    margin-top: 24px;
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+.plan-note {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+/* timeline */
+
+.timeline-card h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+}
+
+.timeline-bar {
+    width: 100%;
+    height: 12px;
+    border-radius: 999px;
+    background: #e5e7eb;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.timeline-fill {
+    width: 70%;
+    height: 100%;
+    margin: 0 auto;
+    background: #86efac;
+}
+
+.timeline-times {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.timeline-legend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.legend-box {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    background: #d1d5db;
+}
+
+/* responsive */
+
+@media (max-width: 900px) {
+    .page-wrapper {
+        padding: 16px;
+    }
+    .qaza-grid {
+        grid-template-columns: 1fr;
+    }
+}
