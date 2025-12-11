@@ -3,6 +3,79 @@
 
 date_default_timezone_set('Asia/Dhaka'); // change if needed
 
+// ---- Qaza storage helpers ----
+$qaza_file = __DIR__ . '/qaza_data.json';
+
+function load_qaza_entries($file)
+{
+    if (!file_exists($file)) {
+        return [];
+    }
+    $json = file_get_contents($file);
+    $data = json_decode($json, true);
+    if (!is_array($data)) {
+        return [];
+    }
+    return $data;
+}
+
+function save_qaza_entries($file, $entries)
+{
+    file_put_contents($file, json_encode($entries, JSON_PRETTY_PRINT));
+}
+
+/**
+ * Sync missed FARD rakats from Daily Salah Log into Qaza list.
+ * - Only Fard is tracked.
+ * - If missed > 0 => create/update Pending entry for that date + prayer.
+ * - If missed == 0 => mark existing entry as Completed.
+ */
+function sync_qaza_from_daily_log($file, $date, $missed_fard)
+{
+    $entries = load_qaza_entries($file);
+
+    foreach ($missed_fard as $prayer => $missed) {
+        // find existing entry (same date + prayer + Fard)
+        $found_index = null;
+        foreach ($entries as $idx => $row) {
+            if (
+                isset($row['date'], $row['prayer'], $row['type']) &&
+                $row['date'] === $date &&
+                $row['prayer'] === $prayer &&
+                $row['type'] === 'Fard'
+            ) {
+                $found_index = $idx;
+                break;
+            }
+        }
+
+        if ($missed > 0) {
+            // missed FARD => Pending Qaza
+            if ($found_index !== null) {
+                $entries[$found_index]['rakats'] = $missed;
+                $entries[$found_index]['status'] = 'Pending';
+            } else {
+                $entries[] = [
+                    'date'   => $date,
+                    'prayer' => $prayer,
+                    'type'   => 'Fard',
+                    'status' => 'Pending',
+                    'rakats' => $missed,
+                ];
+            }
+        } else {
+            // no missed Fard => mark existing entry as Completed
+            if ($found_index !== null) {
+                $entries[$found_index]['status'] = 'Completed';
+            }
+        }
+    }
+
+    save_qaza_entries($file, $entries);
+}
+
+// ---- Salah log logic ----
+
 $prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
 
 $types = [
@@ -30,6 +103,7 @@ $total_prayed   = 0;
 $total_expected = 0;
 $total_missed   = 0;
 $missed_details = [];
+$missed_fard    = []; // <-- only Fard, for Qaza
 
 // read submitted values or use DEFAULT 0 in the form
 foreach ($prayers as $p) {
@@ -51,12 +125,16 @@ foreach ($prayers as $p) {
         $planned = $expected[$p][$key];
         $total_expected += $planned;
 
-        if ($planned > $v) {
-            $missed = $planned - $v;
-            $total_missed += $missed;
-            if ($missed > 0) {
-                $missed_details[] = $p . ' ' . $label;
-            }
+        $diff = $planned - $v; // positive = missed
+
+        if ($diff > 0) {
+            $total_missed += $diff;
+            $missed_details[] = $p . ' ' . $label;
+        }
+
+        // for Qaza, track only FARD missed
+        if ($key === 'fard') {
+            $missed_fard[$p] = max(0, $diff);
         }
     }
 
@@ -64,6 +142,11 @@ foreach ($prayers as $p) {
     $statuses[$p] = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST[$statusField]))
         ? $_POST[$statusField]
         : 'On time';
+}
+
+// After processing the form, sync Qaza file (only on POST)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    sync_qaza_from_daily_log($qaza_file, $selected_date, $missed_fard);
 }
 
 // donut angle
