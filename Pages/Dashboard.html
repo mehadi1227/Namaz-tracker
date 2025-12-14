@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="Designs/dashboard.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div>
+                <img src="" alt="logo">
+                <label>Salah Tracker</label>
+            </div>
+            <div>
+                Friday, 5 December 2025
+            </div>
+            <div>
+                <img src="" alt="notification">
+                <img src="" alt="user icon">
+                <button onclick="toggleProfileOption()">V</button>
+            </div>
+        </nav>
+        <div id="profile_option_container">
+            <ul>
+                <li>Profile</li>
+                <li>Dashboard</li>
+                <li>Logout</li>
+            </ul>
+        </div>
+    </header>
+    <main id="main_container">
+        <aside id="dashboard_menu">
+            <button>Dashboard</button>
+            <button>Prayer Times</button>
+            <button>Salah Log</button>
+            <button>Routine Planner</button>
+            <button>Qaza Planner</button>
+            <button>Reports</button>
+            <button>Knowledge</button>
+        </aside>
+        <section id="content_section">
+            <div id="dashboard_content">
+                <div id="next_prayer" class="iteam_containers">
+                    <h3>Next Prayer</h3>
+                    <h1>Asr 0:2:15</h1> <!-- countdown -->
+                    <h6><span>Asr</span>
+                        <span>4:15</span>
+                        <span>Upcoming</span>
+                    </h6>
+                    <h6>Location,Dhaka,Bangladesh</h6>
+                </div>
+                <div id="summary_container" class="iteam_containers">
+                    <h3>Today's Salah Summary</h3>
+                    <div id="namaj_summary_container">
+                        <ul>
+                            <li><span>FAJR</span><span>Done</span></li>
+                            <li><span>Dhuhr</span><span>Done</span></li>
+                            <li><span>Asr</span><span>Upcoming</span></li>
+                            <li><span>Maghrib</span><span>Upcoming</span></li>
+                            <li><span>Isha</span><span>Upcoming</span></li>
+                            <li><span>Prayed Rakats:</span><span>12/17</span></li>
+                            <li><span>Prayer Missed:</span><span>0</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="quick_action_container" class="iteam_containers">
+                    <h3>Quick actions</h3>
+                    <div>
+                        <button>Log prayer</button>
+                        <button>Update routine</button>
+                        <button>View Qaza list</button>
+                        <button>open reports</button>
+                    </div>
+                </div>
+                <div id="streak_container" class="iteam_containers">
+                    <h3>Streak & Badges</h3>
+                    <h6>Current streak</h6>
+                    <h1>4 days</h1>
+                </div>
+                <div id="weekly_container" class="iteam_containers">
+                    <h3>Weekly Progress</h3>
+                    <div>bar CHart</div>
+                    <p>You prayed all 5 prayers on 3 days this week</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+<script>
+    const toggleProfileOption = () => {
+        const optionBar = document.getElementById('profile_option_container');
+        if (optionBar.style.display === 'block') {
+            optionBar.style.display = 'none';
+        }
+        else {
+            optionBar.style.display = 'block';
+
+        }
+    }
+</script>
+
+</html>
