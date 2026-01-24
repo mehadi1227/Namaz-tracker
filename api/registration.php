@@ -1,50 +1,73 @@
 <?php
 
 require_once '../Database/DBconnection.php';
-if (isset($_POST['btnRegister'])) {
+if ($_SERVER["REQUEST_METHOD"] === 'POST') {
     $name     = $_POST['name'] ?? '';
     $email    = $_POST['email'] ?? '';
     $userPass = $_POST['password'] ?? '';
     $timezone = $_POST['timezone'] ?? '';
 
+    $ERROR = [];
+    $procced = true;
     if (
         empty($name) ||
         empty($email) ||
         empty($userPass) ||
         empty($timezone)
     ) {
-        echo "All fields are required.";
+        http_response_code(422);
+        $ERROR['emptyFieldsErr'] = "All fields are required.";
+        $ERROR['nameErr'] = "Name Field is empty";
+        $ERROR['emailErr'] = "Email Field is empty";
+        $ERROR['passwordErr'] = "Password Field is empty";
+        $ERROR['timezoneErr'] = "Time Zone Must be selected";
+        echo json_encode($ERROR);
         exit;
     } else {
 
+        if (!preg_match("/^[a-zA-Z ]+$/", $name) || strlen($userPass) < 2 || strlen($userPass) > 32) {
 
-        try {
+            $ERROR['nameErr'] = "Invalid Name Format (2 to 32 characters, a-z)";
+            $procced = false;
+        }
 
-            $db = new DBconnection();
-            $useridList = $db->DQlQuery("SELECT userid
-                                         FROM `users`
-                                         ORDER BY userid DESC;");
-            if (!empty($useridList)) {
-                $lastID = $useridList[0]['userid'];
-                $num = (int)substr($lastID, 2);
-                $nextNum = $num + 1;
-            } else {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-                $nextNum = 1;
+            $ERROR['emailErr'] = "Invalid Email Address";
+            $procced = false;
+        }
+
+        if (strlen($userPass) < 8 || strlen($userPass) > 32) {
+
+            $ERROR['passwordErr'] = "Password Should be within 8 to 32 characters";
+            $procced = false;
+        }
+
+        if ($procced) {
+            try {
+
+                $db = new DBconnection();
+                $connection = $db->openConnection();
+
+                $hash = password_hash($userPass, PASSWORD_DEFAULT);
+                $result = $db->userRegistration($connection, 'users', $name, $email, $hash, $timezone);
+
+                if ($result) {
+                    http_response_code(201);
+                    exit;
+                } else {
+                    http_response_code(500);
+                    exit;
+                }
+            } catch (Exception $e) {
+                echo "Database error: " . $e->getMessage();
+                http_response_code(500);
+                exit;
             }
-
-            $newUserId = 'u-' . str_pad((string)$nextNum, 4, '0', STR_PAD_LEFT);
-
-            $hash = password_hash($userPass, PASSWORD_DEFAULT);
-
-            $query = "INSERT INTO users (userid,name, email, password, timezone)
-                      VALUES ('$newUserId','$name', '$email', '$hash', '$timezone')";
-            $retun = $db->DmlQuery($query);
-
-            echo $retun;
-            echo "Registration successful!";
-        } catch (PDOException $e) {
-            echo "Database error: " . $e->getMessage();
+        } else {
+            echo json_encode($ERROR);
+            http_response_code(422);
+            exit;
         }
     }
 }

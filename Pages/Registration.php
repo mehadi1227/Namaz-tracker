@@ -6,16 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration</title>
     <link rel="stylesheet" href="Designs/credential.css">
+    <script src="../api/JS/registration.js"></script>
 </head>
 
 <body>
     <div class="formContainer">
         <h1>Salah Tracker</h1>
         <h3>Registration</h3>
-        <form action="../api/registration.php" method="post">
+        <form onsubmit="CreateUser(event)">
             <input type="text" name="name" placeholder="Full Name">
+            <span id="nameErr" style="color:red;"></span>
             <input type="email" name="email" placeholder="Email">
+            <span id="emailErr" style="color:red;"></span>
             <input type="password" name="password" placeholder="Password">
+            <span id="passwordErr" style="color:red;"></span>
             <select name="timezone">
                 <option selected hidden value="">Time zone (optional)</option>
                 <option value="Asia/Dhaka">(UTC+06:00) Dhaka, Bangladesh</option>
@@ -35,8 +39,10 @@
                 <option value="Australia/Sydney">(UTC+10:00) Sydney, Australia</option>
                 <option value="UTC">(UTC+00:00) UTC</option>
             </select>
+            <span id="timezoneErr" style="color:red;"></span>
             <input type="submit" name="btnRegister" value="Register">
-            <label>Already have an account? <a href="Login.html">Login</a></label>
+            <span id="emptyFieldsErr" style="color:red;"></span>
+            <label>Already have an account? <a href="Login.php">Login</a></label>
         </form>
     </div>
 </body>

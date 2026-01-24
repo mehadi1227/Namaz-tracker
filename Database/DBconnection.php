@@ -2,35 +2,65 @@
 
 class DBconnection
 {
-    private $connectionString = "mysql:host=localhost;dbname=salah_tracker;charset=utf8mb4";
-
+    private $dbHost = 'localhost';
     private $dbUser = 'root';
     private $dbPass = '';
+    private $dbName = 'salah_tracker';
 
-    private $conn = null;
-
-    public function __construct()
+    public function openConnection()
     {
-        $options = [
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES   => false,
-        ];
+        $connection = new mysqli($this->dbHost, $this->dbUser, $this->dbPass, $this->dbName);
 
-        $this->conn = new PDO($this->connectionString, $this->dbUser, $this->dbPass, $options);
+        if ($connection->connect_error) {
+            die("Database connection failed: " . $connection->connect_error);
+        }
+
+        $connection->set_charset("utf8mb4");
+
+        return $connection;
     }
 
-    public function DmlQuery($query)
+    public function userRegistration($connection, $tableName, $name, $email, $password, $timezone)
     {
-        $stmt = $this->conn->prepare($query);
+
+        $sql = "INSERT INTO `$tableName` (name, email, password, timezone)
+                VALUES (?, ?, ?, ?)";
+
+        $stmt = $connection->prepare($sql);
+        if (!$stmt) {
+            return 0; 
+        }
+
+        $stmt->bind_param("ssss", $name, $email, $password, $timezone);
+
         $stmt->execute();
-        return $stmt->rowCount();
+        $result = $stmt->affected_rows;
+
+        $stmt->close();
+        return $result;
     }
 
-    public function DQlQuery($query)
+    public function userLogin($connection, $tableName, $email)
     {
-        $stmt = $this->conn->prepare($query);
+
+        $sql = "SELECT id,password FROM {$tableName} WHERE email=?";
+
+        $stmt = $connection->prepare($sql);
+        if (!$stmt) {
+            return 0; 
+        }
+
+        $stmt->bind_param("s", $email);
+
         $stmt->execute();
-        return $stmt->fetchAll();   
+        $result = $stmt->get_result();
+
+        $stmt->close();
+        return $result;
+    }
+
+    public function closeConnection($connection)
+    {
+        $connection->close();
     }
 }
