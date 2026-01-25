@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prayer Times</title>
 
-  <!-- Page CSS (inside Pages folder) -->
-  <link rel="stylesheet" href="Designs/PrayerTime.css" />
+  <!-- CSS is inside Pages/Designs folder -->
+  <link rel="stylesheet" href="./Designs/PrayerTime.css?v=1" />
 </head>
 
 <body>
-  <div class="page">
+  <main class="page">
     <section class="card">
-      <!-- Top header row -->
+      <!-- Top bar -->
       <div class="topbar">
         <h1 class="title">Prayer Times</h1>
 
@@ -20,7 +20,7 @@
           <select aria-label="Select day">
             <option selected>Today</option>
             <option>Tomorrow</option>
-            <option>Next Day</option>
+            <option>This Week</option>
           </select>
           <span class="chev">▾</span>
         </div>
@@ -35,17 +35,14 @@
             <option selected>Bangladesh</option>
             <option>India</option>
             <option>Pakistan</option>
-            <option>Saudi Arabia</option>
           </select>
           <span class="chev">▾</span>
         </div>
 
         <div class="selectBox">
-          <select aria-label="Select madhab">
+          <select aria-label="Select method">
             <option selected>Hanafi</option>
             <option>Shafi</option>
-            <option>Maliki</option>
-            <option>Hanbali</option>
           </select>
           <span class="chev">▾</span>
         </div>
@@ -53,8 +50,8 @@
         <button class="btn" type="button">Use my location</button>
       </div>
 
-      <!-- Schedule table card -->
-      <div class="tableCard">
+      <!-- Table card -->
+      <section class="tableCard">
         <div class="tableHead">
           <h2>Today’s Prayer Schedule</h2>
         </div>
@@ -67,7 +64,7 @@
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th>Jamaat Time</th>
-                <th>Status</th>
+                <th class="status">Status</th>
               </tr>
             </thead>
 
@@ -111,11 +108,11 @@
           </table>
         </div>
 
-        <div class="note">
+        <p class="note">
           Times are approximate. Please verify with your local mosque if needed.
-        </div>
-      </div>
+        </p>
+      </section>
     </section>
-  </div>
+  </main>
 </body>
 </html>
