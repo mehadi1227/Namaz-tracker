@@ -1,9 +1,9 @@
 /* Prayer Times UI */
 
 :root{
-  --bg: #f4f6f8;
-  --card: #ffffff;
-  --border: #e6eaee;
+  --bg: #f5f6f8;
+  --card: #f7fbfc;
+  --border: #7fefef;
   --text: #0f172a;
   --muted: #5b6675;
   --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
@@ -63,7 +63,7 @@ select{
   -moz-appearance: none;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: #fff;
+  background: #fef7f7;
   padding: 12px 40px 12px 14px;
   font-size: 16px;
   color: var(--text);
@@ -72,7 +72,7 @@ select{
 }
 
 select:focus{
-  border-color: #cfd6de;
+  border-color: #02060b;
 }
 
 .dateSelect,
@@ -107,7 +107,7 @@ select:focus{
 
 .btn{
   border: 1px solid var(--border);
-  background: #fff;
+  background: #f6f7f7;
   border-radius: 10px;
   padding: 12px 18px;
   font-size: 16px;
@@ -124,7 +124,7 @@ select:focus{
   border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
-  background: #fff;
+  background: #eff6fa;
 }
 
 .tableHead{
@@ -149,10 +149,10 @@ table{
 thead th{
   text-align: left;
   font-weight: 700;
-  color: #334155;
+  color: #0a0b0b;
   padding: 14px 18px;
   border-bottom: 1px solid var(--border);
-  background: #ffffff;
+  background: #dad0d0;
   white-space: nowrap;
 }
 
@@ -193,5 +193,84 @@ tbody tr:last-child td{
   }
   .tableHead h2{
     font-size: 22px;
+  }
+  
+}
+/* ===== Animations (added only) ===== */
+
+@keyframes fadeUp {
+  from { transform: translateY(14px); opacity: 0; }
+  to   { transform: translateY(0);  opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-14px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+
+/* whole card comes first */
+.card{
+  opacity: 0;
+  animation: fadeUp 520ms ease-out both;
+}
+
+/* topbar appears after card */
+.topbar{
+  opacity: 0;
+  animation: slideInLeft 480ms ease-out both;
+  animation-delay: 140ms;
+}
+
+/* divider + filters */
+.divider{
+  opacity: 0;
+  animation: fadeUp 420ms ease-out both;
+  animation-delay: 220ms;
+}
+
+.filters{
+  opacity: 0;
+  animation: fadeUp 460ms ease-out both;
+  animation-delay: 300ms;
+}
+
+/* table section appears last */
+.tableCard{
+  opacity: 0;
+  animation: fadeUp 520ms ease-out both;
+  animation-delay: 380ms;
+}
+
+/* rows cascade */
+tbody tr{
+  opacity: 0;
+  animation: fadeUp 420ms ease-out both;
+}
+
+tbody tr:nth-child(1){ animation-delay: 460ms; }
+tbody tr:nth-child(2){ animation-delay: 520ms; }
+tbody tr:nth-child(3){ animation-delay: 580ms; }
+tbody tr:nth-child(4){ animation-delay: 640ms; }
+tbody tr:nth-child(5){ animation-delay: 700ms; }
+
+/* smooth hover micro interaction (no design change) */
+.btn, select, .tableCard{
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+
+.btn:hover{
+  transform: translateY(-1px);
+}
+
+select:focus{
+  transform: translateY(-1px);
+}
+
+/* accessibility */
+@media (prefers-reduced-motion: reduce){
+  .card, .topbar, .divider, .filters, .tableCard, tbody tr{
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
