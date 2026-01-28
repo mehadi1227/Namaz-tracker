@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prayer Times</title>
+
+ <link rel="stylesheet" href="./PrayerTime.css?v=1" />
+</head>
+
+<body>
+  <main class="page" id="prayer_time_page">
+    <section class="card">
+      <div class="topbar">
+        <h1 class="title">Prayer Times</h1>
+
+        <div class="dateSelect">
+          <select aria-label="Select day">
+            <option selected>Today</option>
+            <option>Tomorrow</option>
+            <option>This Week</option>
+          </select>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="filters">
+        <div class="selectBox">
+          <select aria-label="Select country">
+            <option selected>Bangladesh</option>
+            <option>India</option>
+            <option>Pakistan</option>
+            <option>Saudi Arabia</option>
+          </select>
+          <span class="chev">▾</span>
+        </div>
+
+        <div class="selectBox">
+          <select aria-label="Select method">
+            <option selected>Hanafi</option>
+            <option>Shafi</option>
+            <option>Maliki</option>
+            <option>Hanbali</option>
+          </select>
+          <span class="chev">▾</span>
+        </div>
+
+        <button class="btn" type="button">Use my location</button>
+      </div>
+
+      <section class="tableCard">
+        <div class="tableHead">
+          <h2>Today’s Prayer Schedule</h2>
+        </div>
+
+        <div class="tableWrap">
+          <table border="1">
+            <thead>
+              <tr>
+                <th>Prayer</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Jamaat Time</th>
+                <th class="status">Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>Fajr</td>
+                <td>5:05 AM</td>
+                <td>6:15 AM</td>
+                <td>5:35 AM</td>
+                <td class="status">—</td>
+              </tr>
+              <tr>
+                <td>Dhuhr</td>
+                <td>11:50 AM</td>
+                <td>2:30 PM</td>
+                <td>12:15 PM</td>
+                <td class="status">—</td>
+              </tr>
+              <tr>
+                <td>Asr</td>
+                <td>2:30 PM</td>
+                <td>4:45 PM</td>
+                <td>2:45 PM</td>
+                <td class="status">—</td>
+              </tr>
+              <tr>
+                <td>Maghrib</td>
+                <td>4:45 PM</td>
+                <td>5:40 PM</td>
+                <td>4:50 PM</td>
+                <td class="status">—</td>
+              </tr>
+              <tr>
+                <td>Isha</td>
+                <td>5:40 PM</td>
+                <td>12:00 AM</td>
+                <td>8:00 PM</td>
+                <td class="status">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="note"><i><b>
+          Times are approximate. Please verify with your local mosque if needed.</b></i>
+        </p>
+      </section>
+    </section>
+  </main>
+</body>
+</html>
