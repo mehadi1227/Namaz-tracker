@@ -1,11 +1,87 @@
+document.addEventListener('DOMContentLoaded', () => {
+    // Auto-detect timezone and put it into hidden input "timezone"
+    const detectedTz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').trim();
+
+    const tzHidden = document.getElementById('timezone');
+    const tzDisplay = document.getElementById('timezone_display');
+
+    if (tzHidden && detectedTz) tzHidden.value = detectedTz;
+
+    // If your dropdown contains the detected timezone, auto-select it
+    if (tzDisplay && detectedTz) {
+        const has = Array.from(tzDisplay.options).some(o => o.value === detectedTz);
+        if (has) tzDisplay.value = detectedTz;
+    }
+
+    // If user manually selects a timezone from dropdown, copy it into hidden timezone
+    if (tzDisplay) {
+        tzDisplay.addEventListener('change', () => {
+            if (!tzHidden) return;
+            const chosen = (tzDisplay.value || '').trim();
+            tzHidden.value = chosen || detectedTz || '';
+        });
+    }
+
+    // Use my location button
+    const btnLoc = document.getElementById('btnUseLocation');
+    if (btnLoc) btnLoc.addEventListener('click', useMyLocation);
+});
+
+const setLocationStatus = (msg) => {
+    const el = document.getElementById('locationStatus');
+    if (el) el.textContent = msg || '';
+};
+
+function useMyLocation() {
+    if (!navigator.geolocation) {
+        setLocationStatus('Geolocation is not supported by this browser.');
+        return;
+    }
+
+    setLocationStatus('Requesting location permission...');
+
+    navigator.geolocation.getCurrentPosition(
+        (pos) => {
+            const lat = pos.coords.latitude;
+            const lng = pos.coords.longitude;
+
+            const latEl = document.getElementById('lat');
+            const lngEl = document.getElementById('lng');
+            const labelEl = document.getElementById('location_label');
+
+            if (latEl) latEl.value = lat;
+            if (lngEl) lngEl.value = lng;
+
+            if (labelEl) labelEl.value = `Lat ${lat.toFixed(5)}, Lng ${lng.toFixed(5)}`;
+
+            setLocationStatus(`Saved: ${lat.toFixed(5)}, ${lng.toFixed(5)}`);
+        },
+        (err) => {
+            setLocationStatus(err?.message || 'Could not get location.');
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 60000
+        }
+    );
+}
+
 const CreateUser = (event) => {
     event.preventDefault();
     const form = event.currentTarget;
+
+    // Ensure hidden timezone has *something* before sending
+    const tzHidden = document.getElementById('timezone');
+    const tzDisplay = document.getElementById('timezone_display');
+    if (tzHidden && !tzHidden.value && tzDisplay && tzDisplay.value) {
+        tzHidden.value = tzDisplay.value;
+    }
+
     const fd = new FormData(form);
 
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
-
         if (this.readyState === 4 && this.status === 201) {
             alert('User created successfully');
             window.location.href = './Login.php';
@@ -15,9 +91,7 @@ const CreateUser = (event) => {
             ErrorShowing(errors);
         }
         else if (this.readyState === 4 && this.status === 500 && (this.responseText.includes("Duplicate entry") && this.responseText.includes("for key 'email'"))) {
-            //alert('server is down: ' + this.responseText);
-            // document.getElementById('emailErr').textContent = '';
-            ErrorShowing({emailErr : 'This email already exits'})
+            ErrorShowing({ emailErr: 'This email already exits' });
         }
         else if (this.readyState === 4 && this.status === 500) {
             alert('server is down: ' + this.responseText);
@@ -26,14 +100,13 @@ const CreateUser = (event) => {
 
     xhttp.open('post', '../api/registration.php', true);
     xhttp.send(fd);
-
 }
 
 const ErrorShowing = (errors) => {
-
     document.getElementById('emptyFieldsErr').textContent = errors.emptyFieldsErr ?? '';
     document.getElementById('nameErr').textContent = errors.nameErr ?? '';
     document.getElementById('emailErr').textContent = errors.emailErr ?? '';
     document.getElementById('passwordErr').textContent = errors.passwordErr ?? '';
     document.getElementById('timezoneErr').textContent = errors.timezoneErr ?? '';
+    document.getElementById('locationErr').textContent = errors.locationErr ?? '';
 }

@@ -7,6 +7,11 @@
 
   <link rel="stylesheet" href="./dashboard.css?v=1" />
   <link rel="stylesheet" href="./PrayerTime.css?v=1" />
+  <link rel="stylesheet" href="./Designs/AsideMenu.css" />
+  <link rel="stylesheet" href="./Designs/Navbar.css" />
+
+  <script src="../api/JS/dashboard.js"></script>
+  <script src="../api/JS/NavbarOption.js"></script>
 </head>
 
 <body>
@@ -40,16 +45,16 @@
 
   <main id="main_container">
     <aside id="dashboard_menu" class="sidebar-anim">
-      <button class="menu_btn active" data-view="dashboard">Dashboard</button>
-      <button class="menu_btn" data-view="prayer">Prayer Times</button>
-      <button class="menu_btn" data-view="salahlog">Salah Log</button>
+      <button class="menu_btn active"><a href="./Dashboard.html" style="text-decoration: none;">Dashboard</a> </button>
+      <button class="menu_btn" ><a href="./PrayerTime.html" style="text-decoration: none;">Prayer Times</a> </button>
+      <button class="menu_btn" ><a href="./daily_log.php" style="text-decoration: none;">Salah Log</a> </button>
 
-      <button class="menu_btn" data-view="qaza">Qaza Planner</button>
+      <button class="menu_btn" >Qaza Planner</button>
 
-      <button class="menu_btn" data-view="dashboard">Routine Planner</button>
-      <button class="menu_btn" data-view="dashboard">Reports</button>
-      <button class="menu_btn" data-view="dashboard">Knowledge</button>
-      <button class="menu_btn" data-view="dashboard">Settings</button>
+      <button class="menu_btn" >Routine Planner</button>
+      <button class="menu_btn" >Reports</button>
+      <button class="menu_btn" >Knowledge</button>
+      <button class="menu_btn"  >Settings</button>
     </aside>
 
     <section id="content_section">
@@ -70,19 +75,7 @@
         <div id="summary_container" class="iteam_containers card-anim d2">
           <h3>Today's Salah Summary</h3>
           <div id="namaj_summary_container" class="summary_list">
-            <ul>
-              <li><span>Fajr</span><span class="status done">Done</span></li>
-              <li><span>Dhuhr</span><span class="status done">Done</span></li>
-              <li><span>Asr</span><span class="status up">Upcoming</span></li>
-              <li><span>Maghrib</span><span class="status up">Upcoming</span></li>
-              <li><span>Isha</span><span class="status up">Upcoming</span></li>
 
-              <li class="summary_footer">
-                <span>Prayed rakats:</span><span>12 / 17</span>
-              </li>
-              <li class="summary_footer">
-                <span>Missed:</span><span>0</span>
-              </li>
             </ul>
           </div>
         </div>
@@ -125,112 +118,14 @@
         </div>
       </div>
 
-      <div id="prayer_content" style="display:none;"></div>
-      <div id="salahlog_content" style="display:none;">
-        <iframe
-          id="salahlog_iframe"
-          title="Daily Salah Log"
-          src=""
-          style="width:100%; height: calc(100vh - 140px); border:0; border-radius:12px;"
-          loading="lazy"
-        ></iframe>
-      </div>
-
-      <div id="qaza_content" style="display:none;">
-        <iframe
-          id="qaza_iframe"
-          title="Qaza Planner"
-          src=""
-          style="width:100%; height: calc(100vh - 140px); border:0; border-radius:12px;"
-          loading="lazy"
-        ></iframe>
-      </div>
 
     </section>
   </main>
 
   <script>
-    const toggleProfileOption = () => {
-      const optionBar = document.getElementById('profile_option_container');
-      optionBar.style.display = (optionBar.style.display === 'block') ? 'none' : 'block';
-    };
+    
 
-    const dashboardView = document.getElementById('dashboard_content');
-    const prayerView = document.getElementById('prayer_content');
-    const salahView = document.getElementById('salahlog_content');
-    const qazaView = document.getElementById('qaza_content');
 
-    const salahFrame = document.getElementById('salahlog_iframe');
-    const qazaFrame = document.getElementById('qaza_iframe');
-
-    let prayerLoaded = false;
-    let salahLoaded = false;
-    let qazaLoaded = false;
-
-    async function loadPrayerTimes() {
-      if (prayerLoaded) return;
-
-      try {
-        const res = await fetch('./PrayerTime.html');
-        const htmlText = await res.text();
-
-        const doc = new DOMParser().parseFromString(htmlText, 'text/html');
-        const main = doc.querySelector('#prayer_time_page') || doc.querySelector('main.page');
-
-        if (!main) {
-          prayerView.innerHTML = "<p style='padding:16px;'>Could not load PrayerTime content.</p>";
-          prayerLoaded = true;
-          return;
-        }
-
-        prayerView.innerHTML = "";
-        prayerView.appendChild(main.cloneNode(true));
-        prayerLoaded = true;
-
-      } catch (e) {
-        prayerView.innerHTML = "<p style='padding:16px;'>Error loading PrayerTime.html</p>";
-      }
-    }
-
-    function loadSalahLog() {
-      if (salahLoaded) return;
-      salahFrame.src = './daily_log.php';
-      salahLoaded = true;
-    }
-
-    function loadQazaPlanner() {
-      if (qazaLoaded) return;
-      qazaFrame.src = './qaza_planner.php';
-      qazaLoaded = true;
-    }
-
-    async function showView(viewName) {
-      dashboardView.style.display = 'none';
-      prayerView.style.display = 'none';
-      salahView.style.display = 'none';
-      qazaView.style.display = 'none';
-
-      if (viewName === 'prayer') {
-        await loadPrayerTimes();
-        prayerView.style.display = 'block';
-      } else if (viewName === 'salahlog') {
-        loadSalahLog();
-        salahView.style.display = 'block';
-      } else if (viewName === 'qaza') {
-        loadQazaPlanner();
-        qazaView.style.display = 'block';
-      } else {
-        dashboardView.style.display = 'block';
-      }
-    }
-
-    document.querySelectorAll('#dashboard_menu .menu_btn').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        document.querySelectorAll('#dashboard_menu .menu_btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        await showView(btn.dataset.view || 'dashboard');
-      });
-    });
   </script>
 </body>
 </html>

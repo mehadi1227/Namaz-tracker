@@ -13,14 +13,19 @@
     <div class="formContainer">
         <h1>Salah Tracker</h1>
         <h3>Registration</h3>
+
         <form onsubmit="CreateUser(event)">
             <input type="text" name="name" placeholder="Full Name">
             <span id="nameErr" style="color:red;"></span>
+
             <input type="email" name="email" placeholder="Email">
             <span id="emailErr" style="color:red;"></span>
+
             <input type="password" name="password" placeholder="Password">
             <span id="passwordErr" style="color:red;"></span>
-            <select name="timezone">
+
+            <!-- Display dropdown (optional) -->
+            <select name="timezone_display" id="timezone_display">
                 <option selected hidden value="">Time zone (optional)</option>
                 <option value="Asia/Dhaka">(UTC+06:00) Dhaka, Bangladesh</option>
                 <option value="Asia/Karachi">(UTC+05:00) Karachi, Pakistan</option>
@@ -39,9 +44,23 @@
                 <option value="Australia/Sydney">(UTC+10:00) Sydney, Australia</option>
                 <option value="UTC">(UTC+00:00) UTC</option>
             </select>
+
+            <!-- Actual timezone value that gets submitted (auto-filled by JS) -->
+            <input type="hidden" name="timezone" id="timezone" value="">
             <span id="timezoneErr" style="color:red;"></span>
+
+            <!-- Use My Location -->
+            <button id="btnUseLocation" type="button">Use my location</button>
+            <small id="locationStatus" style="display:block;margin:6px 0;color:#444;"></small>
+
+            <input type="hidden" name="lat" id="lat" value="">
+            <input type="hidden" name="lng" id="lng" value="">
+            <input type="text" name="location_label" id="location_label" placeholder="Location (auto)" readonly>
+            <span id="locationErr" style="color:red;"></span>
+
             <input type="submit" name="btnRegister" value="Register">
             <span id="emptyFieldsErr" style="color:red;"></span>
+
             <label>Already have an account? <a href="Login.php">Login</a></label>
         </form>
     </div>

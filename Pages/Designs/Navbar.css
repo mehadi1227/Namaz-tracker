@@ -1,0 +1,103 @@
+header nav {
+  width: 100%;
+  background: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* left */
+.nav_left{
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.brand_icon{
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #e8f7ef;
+  border: 1px solid #cfeedd;
+}
+
+.brand_logo{
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+header nav div:first-child label {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* center */
+.nav_center{
+  font-weight: 600;
+  color: #111827;
+  letter-spacing: 0.02em;
+}
+
+/* right */
+.nav_right{
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.icon_btn,
+.caret_btn{
+  width: 38px;
+  height: 38px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.avatar{
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #6b7280;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border: none;
+}
+
+/* Profile dropdown */
+#profile_option_container{
+  display: none;
+  position: absolute;
+  top: 60px;
+  right: 14px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px 10px;
+  box-shadow: 0 16px 30px rgba(15,23,42,0.08);
+  z-index: 50;
+}
+
+#profile_option_container ul li{
+  list-style: none;
+  padding: 10px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #111827;
+}
+
+#profile_option_container ul li:hover{
+  background: #f3f4f6;
+}
+
+#profile_option_container ul li:last-child{
+  color: #dc2626;
+}

@@ -1,0 +1,41 @@
+/* ===== Layout ===== */
+#main_container {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: calc(100vh - 62px);
+}
+
+/* Sidebar (light like screenshot) */
+#dashboard_menu {
+  background: #f8fafc;
+  border-right: 1px solid #e5e7eb;
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.menu_btn{
+  width: 100%;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 12px;
+  padding: 12px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #0f172a;
+  font-weight: 600;
+  text-align: left;
+}
+
+.menu_btn:hover{
+  background: #a467ed;
+}
+
+.menu_btn.active{
+  background: #a467ed;
+  color: #0f172a;
+ 
+}

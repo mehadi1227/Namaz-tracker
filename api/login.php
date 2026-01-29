@@ -52,6 +52,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             if (password_verify($password, $user['password'])) {
                 $_SESSION['userid'] = $user['id'];
+                $_SESSION['latitude'] = $user['latitude'];
+                $_SESSION['longitude'] = $user['longitude'];
+                $_SESSION['timezone'] = $user['timezone'];
+                $_SESSION['location_label'] = $user['location_label'];
+
                 http_response_code(200);
                 exit;
             } else {

@@ -1,284 +1,184 @@
 <?php
-
-date_default_timezone_set('Asia/Dhaka'); 
-
-$qaza_file = __DIR__ . '/qaza_data.json';
-
-function load_qaza_entries($file)
-{
-    if (!file_exists($file)) {
-        return [];
-    }
-    $json = file_get_contents($file);
-    $data = json_decode($json, true);
-    if (!is_array($data)) {
-        return [];
-    }
-    return $data;
-}
-
-function save_qaza_entries($file, $entries)
-{
-    file_put_contents($file, json_encode($entries, JSON_PRETTY_PRINT));
-}
-
-function sync_qaza_from_daily_log($file, $date, $missed_fard)
-{
-    $entries = load_qaza_entries($file);
-
-    foreach ($missed_fard as $prayer => $missed) {
-        $found_index = null;
-        foreach ($entries as $idx => $row) {
-            if (
-                isset($row['date'], $row['prayer'], $row['type']) &&
-                $row['date'] === $date &&
-                $row['prayer'] === $prayer &&
-                $row['type'] === 'Fard'
-            ) {
-                $found_index = $idx;
-                break;
-            }
-        }
-
-        if ($missed > 0) {
-            if ($found_index !== null) {
-                $entries[$found_index]['rakats'] = $missed;
-                $entries[$found_index]['status'] = 'Pending';
-            } else {
-                $entries[] = [
-                    'date'   => $date,
-                    'prayer' => $prayer,
-                    'type'   => 'Fard',
-                    'status' => 'Pending',
-                    'rakats' => $missed,
-                ];
-            }
-        } else {
-            if ($found_index !== null) {
-                $entries[$found_index]['status'] = 'Completed';
-            }
-        }
-    }
-
-    save_qaza_entries($file, $entries);
-}
-
+date_default_timezone_set('Asia/Dhaka');
 
 $prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+$types = ['Fard', 'Sunnah', 'Nafl'];
 
-$types = [
-    'fard'   => 'Fard',
-    'sunnah' => 'Sunnah',
-    'nafl'   => 'Nafl'
-];
-
-$expected = [
-    'Fajr'    => ['fard' => 2, 'sunnah' => 2, 'nafl' => 0],
-    'Dhuhr'   => ['fard' => 4, 'sunnah' => 4, 'nafl' => 0],
-    'Asr'     => ['fard' => 4, 'sunnah' => 0, 'nafl' => 0],
-    'Maghrib' => ['fard' => 3, 'sunnah' => 3, 'nafl' => 0],
-    'Isha'    => ['fard' => 4, 'sunnah' => 4, 'nafl' => 0],
-];
-
-$selected_date = isset($_POST['log_date']) && $_POST['log_date'] !== ''
-    ? $_POST['log_date']
+$selected_date = isset($_GET['log_date']) && $_GET['log_date'] !== ''
+    ? $_GET['log_date']
     : date('Y-m-d');
 
-$values         = [];
-$statuses       = [];
-$total_prayed   = 0;
-$total_expected = 0;
-$total_missed   = 0;
-$missed_details = [];
-$missed_fard    = []; 
-
-foreach ($prayers as $p) {
-    $values[$p] = [];
-    foreach ($types as $key => $label) {
-        $fieldName = strtolower($p) . '_' . $key;
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $v = isset($_POST[$fieldName]) ? (int)$_POST[$fieldName] : 0;
-        } else {
-            $v = 0;
-        }
-
-        $values[$p][$key] = $v;
-        $total_prayed += $v;
-
-        $planned = $expected[$p][$key];
-        $total_expected += $planned;
-
-        $diff = $planned - $v; 
-
-        if ($diff > 0) {
-            $total_missed += $diff;
-            $missed_details[] = $p . ' ' . $label;
-        }
-
-        if ($key === 'fard') {
-            $missed_fard[$p] = max(0, $diff);
-        }
-    }
-
-    $statusField = strtolower($p) . '_status';
-    $statuses[$p] = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST[$statusField]))
-        ? $_POST[$statusField]
-        : 'On time';
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    sync_qaza_from_daily_log($qaza_file, $selected_date, $missed_fard);
-}
-
-if ($total_expected > 0) {
-    $prayed_fraction = max(0, min(1, $total_prayed / $total_expected));
-    $donut_deg = round(360 * $prayed_fraction);
-} else {
-    $donut_deg = 0;
-}
-
-if ($total_expected == 0 && $total_prayed == 0) {
-    $summary_text = "You haven’t set any planned rakats for today yet.";
-} elseif ($total_missed === 0) {
-    $summary_text = "Great job! You didn't miss any planned rakats today.";
-} else {
-    $unique_missed = array_unique($missed_details);
-    if (count($unique_missed) === 1) {
-        $summary_text = "You missed only " . $unique_missed[0] . " today.";
-    } else {
-        $list = implode(', ', array_slice($unique_missed, 0, 3));
-        if (count($unique_missed) > 3) {
-            $list .= ', and others';
-        }
-        $summary_text = "You missed: " . $list . ".";
-    }
-}
+$base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Daily Salah Log</title>
-
-    <?php
-      $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
-    ?>
-
-    <link rel="stylesheet" href="<?= $base ?>/daily_log.css?v=1">
-
-    <!-- <link rel="stylesheet" href="<?= $base ?>/Designs/daily_log.css?v=1"> -->
+    <link rel="stylesheet" href="./daily_log.css">
+    <link rel="stylesheet" href="./Designs/AsideMenu.css" />
+    <link rel="stylesheet" href="./Designs/Navbar.css" />
+    <script src="../api/JS/salaLog.js"></script>
 </head>
 
 <body>
-<div class="page-wrapper">
-    <form class="main-card" method="post">
-        <div class="header">
-            <h1>Daily Salah Log</h1>
-            <div class="date-picker">
-                <label for="log_date">Date:</label>
-                <input type="date" id="log_date" name="log_date"
-                       value="<?php echo htmlspecialchars($selected_date); ?>">
+    <header>
+        <nav>
+            <div class="nav_left">
+                <div class="brand_icon" aria-hidden="true"></div>
+                <img class="brand_logo" src="" alt="logo">
+                <label>Salah Tracker</label>
             </div>
+
+            <div class="nav_center">
+                Friday, 5 December 2025
+            </div>
+
+            <div class="nav_right">
+                <button class="icon_btn" type="button" aria-label="Notifications">N</button>
+                <button class="avatar" type="button" aria-label="User">RA</button>
+                <button class="caret_btn" type="button" onclick="toggleProfileOption()">V</button>
+            </div>
+        </nav>
+
+        <div id="profile_option_container">
+            <ul>
+                <li>Profile</li>
+                <li>Dashboard</li>
+                <li>Logout</li>
+            </ul>
         </div>
+    </header>
 
-        <div class="content-grid">
-            <div class="card">
-                <h2>Log Today's Salah</h2>
-                <p class="log-heading">
-                    Log for <?php echo date('d/m/Y', strtotime($selected_date)); ?>
-                </p>
+    <main id="main_container">
+        <aside id="dashboard_menu" class="sidebar-anim">
+            <button class="menu_btn "><a href="./Dashboard.html" style="text-decoration: none;">Dashboard</a> </button>
+            <button class="menu_btn "><a href="./PrayerTime.html" style="text-decoration: none;">Prayer Times</a> </button>
+            <button class="menu_btn active"><a href="./daily_log.php" style="text-decoration: none;">Salah Log</a> </button>
 
-                <div class="table-wrapper">
-                    <table class="salah-table">
-                        <thead>
-                        <tr>
-                            <th>Prayer</th>
-                            <th>Fard</th>
-                            <th>Sunnah</th>
-                            <th>Nafl</th>
-                            <th>Status</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <?php foreach ($prayers as $p): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($p); ?></td>
+            <button class="menu_btn" data-view="qaza">Qaza Planner</button>
 
-                                <?php foreach ($types as $key => $label): ?>
-                                    <?php
-                                    $fieldName = strtolower($p) . '_' . $key;
-                                    $current   = $values[$p][$key];
+            <button class="menu_btn" data-view="dashboard">Routine Planner</button>
+            <button class="menu_btn" data-view="dashboard">Reports</button>
+            <button class="menu_btn" data-view="dashboard">Knowledge</button>
+            <button class="menu_btn" id="testbtn">Settings</button>
+        </aside>
 
-                                    
-                                    if ($key === 'nafl') {
-                                        $options = [0, 2, 4, 6, 8, 12, 14, 16, 20];
-                                    } else { 
-                                        $options = [0, 2, 3, 4];
-                                    }
-                                    ?>
-                                    <td>
-                                        <select name="<?php echo htmlspecialchars($fieldName); ?>">
-                                            <?php foreach ($options as $opt): ?>
-                                                <option value="<?php echo $opt; ?>"
-                                                    <?php echo ($current == $opt) ? 'selected' : ''; ?>>
-                                                    <?php echo $opt; ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </td>
-                                <?php endforeach; ?>
+        <div class="page-wrapper">
 
-                                <?php
-                                $statusField   = strtolower($p) . '_status';
-                                $currentStatus = $statuses[$p];
-                                ?>
-                                <td>
-                                    <select name="<?php echo htmlspecialchars($statusField); ?>">
-                                        <?php foreach (['On time', 'Late', 'Missed'] as $status): ?>
-                                            <option value="<?php echo $status; ?>"
-                                                <?php echo ($currentStatus === $status) ? 'selected' : ''; ?>>
-                                                <?php echo $status; ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                        </tbody>
-                    </table>
+            <!-- AJAX submit -->
+            <form id="dailyLogForm" class="main-card" onsubmit="SaveToSalahLog(event)">
+
+                <div class="header">
+                    <h1>Daily Salah Log</h1>
+
+                    <div class="date-picker">
+                        <label for="log_date">Date:</label>
+                        <input type="date" id="log_date" name="log_date" value="<?= htmlspecialchars($selected_date) ?>">
+
+                        <input type="hidden" id="prayer_date" name="prayer_date" value="<?= htmlspecialchars($selected_date) ?>">
+                    </div>
                 </div>
 
-                <button type="submit" class="primary-btn">Save log</button>
-            </div>
+                <!-- this is what your backend expects -->
+                <input type="hidden" id="prayer_date" name="prayer_date" value="<?= htmlspecialchars($selected_date) ?>">
 
-           
-            <div class="card">
-                <h2>Today’s Summary</h2>
+                <div class="content-grid">
 
-                <div class="summary-grid">
-                    <div class="summary-numbers">
-                        <span class="label">Total prayed rakats:</span>
-                        <span class="value"><?php echo $total_prayed; ?></span>
+                    <div class="card">
+                        <h2>Log Today’s Salah</h2>
+                        <p class="log-heading">Log for <?= date('d/m/Y', strtotime($selected_date)); ?></p>
+
+                        <div class="table-wrapper">
+                            <table class="salah-table">
+                                <thead>
+                                    <tr>
+                                        <th>Prayer</th>
+                                        <th>Fard</th>
+                                        <th>Sunnah</th>
+                                        <th>Nafl</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <?php foreach ($prayers as $p): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($p) ?></td>
+
+                                            <?php foreach ($types as $t): ?>
+                                                <?php
+                                                $col = $p . '_' . $t; // e.g. Fajr_Fard
+                                                $options = ($t === 'Nafl')
+                                                    ? [0, 2, 4, 6, 8, 12, 14, 16, 20]
+                                                    : [0, 2, 3, 4];
+                                                ?>
+                                                <td>
+                                                    <select
+                                                        name="<?= htmlspecialchars($col) ?>"
+                                                        class="rakat-select"
+                                                        data-prayer="<?= htmlspecialchars($p) ?>"
+                                                        data-type="<?= htmlspecialchars($t) ?>">
+                                                        <?php foreach ($options as $opt): ?>
+                                                            <option value="<?= $opt ?>"><?= $opt ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </td>
+                                            <?php endforeach; ?>
+
+                                            <?php $statusCol = $p . '_Status'; ?>
+                                            <td>
+                                                <select
+                                                    name="<?= htmlspecialchars($statusCol) ?>"
+                                                    class="status-select"
+                                                    data-prayer="<?= htmlspecialchars($p) ?>">
+                                                    <?php foreach (['On time', 'Late', 'Missed'] as $status): ?>
+                                                        <option value="<?= $status ?>"><?= $status ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                        <button id="btnSaveLog" type="submit" class="primary-btn">Save log</button>
+                        <div id="save_msg" style="margin-top:10px;font-weight:700;"></div>
                     </div>
-                    <div class="summary-numbers">
-                        <span class="label">Total missed rakats:</span>
-                        <span class="value"><?php echo $total_missed; ?></span>
-                    </div>
 
-                    <div class="summary-chart">
-                        <div class="donut"
-                             style="background: conic-gradient(#079664 <?php echo $donut_deg; ?>deg, #e5e7eb 0);">
+                    <div class="card">
+                        <h2>Today’s Summary</h2>
+
+                        <div class="summary-grid">
+                            <div class="summary-numbers">
+                                <span class="label">Total prayed wakts:</span>
+                                <span class="value" id="total_prayed">0</span>
+                            </div>
+
+                            <div class="summary-numbers">
+                                <span class="label">Total missed wakts:</span>
+                                <span class="value" id="total_missed">0</span>
+                            </div>
+
+                            <div class="summary-chart">
+                                <div class="donut" id="donutChart"
+                                    style="background: conic-gradient(#079664 0deg, #e5e7eb 0);">
+                                </div>
+                            </div>
+
+                            <p class="summary-text" id="summary_text">
+                                Select your rakats and press “Save log”.
+                            </p>
                         </div>
                     </div>
 
-                    <p class="summary-text">
-                        <?php echo htmlspecialchars($summary_text); ?>
-                    </p>
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
-</div>
+    </main>
 </body>
+
 </html>

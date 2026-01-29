@@ -16,22 +16,27 @@ class DBconnection
         }
 
         $connection->set_charset("utf8mb4");
-
         return $connection;
     }
 
-    public function userRegistration($connection, $tableName, $name, $email, $password, $timezone)
+    // UPDATED: now also stores location fields (optional)
+    public function userRegistration($connection, $tableName, $name, $email, $password, $timezone, $lat, $lng, $locationLabel)
     {
-
-        $sql = "INSERT INTO `$tableName` (name, email, password, timezone)
-                VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO `$tableName`
+                (name, email, password, timezone, latitude, longitude, location_label)
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $connection->prepare($sql);
-        if (!$stmt) {
-            return 0; 
-        }
+        if (!$stmt) return 0;
 
-        $stmt->bind_param("ssss", $name, $email, $password, $timezone);
+        // convert empty strings to NULL for optional columns
+        $tzParam = ($timezone === '') ? null : $timezone;
+        $latParam = ($lat === '') ? null : $lat;
+        $lngParam = ($lng === '') ? null : $lng;
+        $labelParam = ($locationLabel === '') ? null : $locationLabel;
+
+        // bind everything as strings; MySQL will convert DECIMAL columns automatically
+        $stmt->bind_param("sssssss", $name, $email, $password, $tzParam, $latParam, $lngParam, $labelParam);
 
         $stmt->execute();
         $result = $stmt->affected_rows;
@@ -42,22 +47,122 @@ class DBconnection
 
     public function userLogin($connection, $tableName, $email)
     {
-
-        $sql = "SELECT id,password FROM {$tableName} WHERE email=?";
+        $sql = "SELECT id,password,timezone, latitude, longitude, location_label FROM {$tableName} WHERE email=?";
 
         $stmt = $connection->prepare($sql);
-        if (!$stmt) {
-            return 0; 
-        }
+        if (!$stmt) return 0;
 
         $stmt->bind_param("s", $email);
-
         $stmt->execute();
         $result = $stmt->get_result();
 
         $stmt->close();
         return $result;
     }
+
+    // Helper: bind dynamic params by reference
+private function bindDynamic($stmt, string $types, array &$params): bool
+{
+    $bind = [];
+    $bind[] = $types;
+
+    foreach ($params as $k => &$p) {
+        $bind[] = &$p; // IMPORTANT: by reference
+    }
+
+    return call_user_func_array([$stmt, 'bind_param'], $bind);
+}
+
+// Return existing row id or null
+public function CheckExistingSalahLog($connection, $tableName, int $userId, string $prayerDate)
+{
+    $sql = "SELECT * FROM `$tableName` WHERE user_id=? AND prayer_date=? LIMIT 1";
+    $stmt = $connection->prepare($sql);
+    if (!$stmt) return null;
+
+    $stmt->bind_param("is", $userId, $prayerDate);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    $stmt->close();
+    return $res;
+}
+
+public function InsertNewSalahLog($connection, $tableName, array $prayerLogs, int $userId, string $prayerDate): bool
+{
+    // Base columns always present
+    $columns = ['user_id', 'prayer_date'];
+    $placeholders = ['?', '?'];
+    $types = 'is';
+    $params = [$userId, $prayerDate];
+
+    foreach ($prayerLogs as $key => $value) {
+        $columns[] = $key;
+        $placeholders[] = '?';
+
+        if (str_ends_with($key, '_Status')) {
+            $types .= 's';
+            $params[] = (string)$value;
+        } else {
+            $types .= 'i';
+            $params[] = (int)$value;
+        }
+    }
+
+    $sql = "INSERT INTO `$tableName` (" . implode(', ', $columns) . ")
+            VALUES (" . implode(', ', $placeholders) . ")";
+
+    $stmt = $connection->prepare($sql);
+    if (!$stmt) return false;
+
+    $this->bindDynamic($stmt, $types, $params);
+
+    $ok = $stmt->execute();
+    $stmt->close();
+
+    return $ok;
+}
+
+public function UpdateExistingSalahLog($connection, $tableName, array $prayerLogs, int $userId, string $prayerDate, int $id): bool
+{
+    if (empty($prayerLogs)) return true; // nothing to update
+
+    $setParts = [];
+    $types = '';
+    $params = [];
+
+    foreach ($prayerLogs as $key => $value) {
+        $setParts[] = "`$key` = ?";
+
+        if (str_ends_with($key, '_Status')) {
+            $types .= 's';
+            $params[] = (string)$value;
+        } else {
+            $types .= 'i';
+            $params[] = (int)$value;
+        }
+    }
+
+    // WHERE user_id=?, prayer_date=?, id=?
+    $types .= 'isi';
+    $params[] = $userId;
+    $params[] = $prayerDate;
+    $params[] = $id;
+
+    $sql = "UPDATE `$tableName`
+            SET " . implode(', ', $setParts) . "
+            WHERE user_id = ? AND prayer_date = ? AND id = ?";
+
+    $stmt = $connection->prepare($sql);
+    if (!$stmt) return false;
+
+    $this->bindDynamic($stmt, $types, $params);
+
+    $ok = $stmt->execute();
+    $stmt->close();
+
+    return $ok;
+}
 
     public function closeConnection($connection)
     {
