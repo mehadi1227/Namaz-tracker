@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Routine Planner</title>
+
+  <!-- CSS is inside Pages/Designs folder -->
+  <link rel="stylesheet" href="./Designs/RoutinePlanner.css?v=1" />
+</head>
+
+<body>
+  <main class="page">
+    <section class="shell">
+
+      <!-- Header -->
+      <header class="pageHeader">
+        <h1 class="pageTitle">Daily Routine Planner</h1>
+      </header>
+
+      <p class="pageSub">
+        Add your typical day so we can suggest prayer widnows.
+      </p>
+
+      <!-- Top 2 cards -->
+      <section class="grid2">
+        <!-- Routine Form -->
+        <div class="card">
+          <h2 class="cardTitle"> Routine Form</h2>
+
+          <div class="fieldGroup">
+            <label class="lbl">Sleep time</label>
+            <div class="row2">
+              <input class="inp" type="text" placeholder="From" />
+              <input class="inp" type="text" placeholder="To" />
+            </div>
+          </div>
+
+          <div class="fieldGroup">
+            <label class="lbl">Work / Study time</label>
+            <div class="row2">
+              <input class="inp" type="text" placeholder="From" />
+              <input class="inp" type="text" placeholder="To" />
+            </div>
+          </div>
+
+          <div class="fieldGroup">
+            <label class="lbl">Custom Blocks</label>
+
+            <div class="row2">
+              <input class="inp" type="text" placeholder="Name" />
+              <input class="inp" type="text" placeholder="From time" />
+            </div>
+
+            <div class="row2">
+              <input class="inp" type="text" placeholder="Add block" />
+              <div class="rowPlus">
+                <input class="inp" type="text" placeholder="To time" />
+                <button class="plusBtn" type="button" aria-label="Add block">+</button>
+              </div>
+            </div>
+          </div>
+
+          <button class="primaryBtn" type="button">Save routine</button>
+        </div>
+
+        <!-- Suggested prayer times -->
+        <div class="card">
+          <h5 class="cardTitle">Suggested prayer times</h5>
+
+          <div class="suggestList">
+            <div class="sItem">
+              <div class="sTitle">Fajr</div>
+              <div class="sSub">Suggested between 5:05 AM – 5:25 AM</div>
+            </div>
+
+            <div class="sItem">
+              <div class="sTitle">Dhuhr</div>
+              <div class="sSub">During lunch break &nbsp; 1:10 PM – 1:25 PM</div>
+            </div>
+
+            <div class="sItem">
+              <div class="sTitle">Asr</div>
+              <div class="sSub">Dihurr &nbsp; 5:50 PM – 1:25 AM</div>
+            </div>
+
+            <div class="sItem">
+              <div class="sTitle">Maghrib</div>
+              <div class="sSub">Isha &nbsp; 6:20 PM – 7:15 AM</div>
+            </div>
+
+            <div class="sItem">
+              <div class="sTitle">Isha</div>
+              <div class="sSub">Suggested between &nbsp; 7:05 AM – 5:35 AM</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Timeline -->
+      <section class="card timelineCard">
+        <h1 class="cardTitle">Timeline</h1>
+
+        <div class="timeline">
+          <div class="bar">
+            <span class="seg busy" style="left: 0%; width: 35%;"></span>
+            <span class="seg busy" style="left: 35%; width: 18%;"></span>
+            <span class="seg window" style="left: 53%; width: 47%;"></span>
+          </div>
+
+          <div class="timeRow">
+            <span>12 AM</span>
+            <span>12 AM</span>
+          </div>
+
+          <div class="legend">
+            <div class="legItem">
+              <span class="swatch busy"></span>
+              <span>Busy time</span>
+            </div>
+            <div class="legItem">
+              <span class="swatch window"></span>
+              <span>Prayer window</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </section>
+  </main>
+</body>
+</html>
