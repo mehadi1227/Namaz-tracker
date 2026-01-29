@@ -1,0 +1,37 @@
+[
+    {
+        "date": "2026-01-29",
+        "prayer": "Fajr",
+        "type": "Fard",
+        "status": "Completed",
+        "rakats": 2
+    },
+    {
+        "date": "2026-01-29",
+        "prayer": "Dhuhr",
+        "type": "Fard",
+        "status": "Completed",
+        "rakats": 4
+    },
+    {
+        "date": "2026-01-29",
+        "prayer": "Asr",
+        "type": "Fard",
+        "status": "Completed",
+        "rakats": 4
+    },
+    {
+        "date": "2026-01-29",
+        "prayer": "Maghrib",
+        "type": "Fard",
+        "status": "Pending",
+        "rakats": 3
+    },
+    {
+        "date": "2026-01-29",
+        "prayer": "Isha",
+        "type": "Fard",
+        "status": "Pending",
+        "rakats": 4
+    }
+]

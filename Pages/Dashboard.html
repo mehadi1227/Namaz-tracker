@@ -1,106 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="Designs/dashboard.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+
+  <link rel="stylesheet" href="./dashboard.css?v=1" />
+  <link rel="stylesheet" href="./PrayerTime.css?v=1" />
 </head>
 
 <body>
-    <header>
-        <nav>
-            <div>
-                <img src="" alt="logo">
-                <label>Salah Tracker</label>
-            </div>
-            <div>
-                Friday, 5 December 2025
-            </div>
-            <div>
-                <img src="" alt="notification">
-                <img src="" alt="user icon">
-                <button onclick="toggleProfileOption()">V</button>
-            </div>
-        </nav>
-        <div id="profile_option_container">
-            <ul>
-                <li>Profile</li>
-                <li>Dashboard</li>
-                <li>Logout</li>
-            </ul>
+  <header>
+    <nav>
+      <div class="nav_left">
+        <div class="brand_icon" aria-hidden="true"></div>
+        <img class="brand_logo" src="" alt="logo">
+        <label>Salah Tracker</label>
+      </div>
+
+      <div class="nav_center">
+        Friday, 5 December 2025
+      </div>
+
+      <div class="nav_right">
+        <button class="icon_btn" type="button" aria-label="Notifications">N</button>
+        <button class="avatar" type="button" aria-label="User">RA</button>
+        <button class="caret_btn" type="button" onclick="toggleProfileOption()">V</button>
+      </div>
+    </nav>
+
+    <div id="profile_option_container">
+      <ul>
+        <li>Profile</li>
+        <li>Dashboard</li>
+        <li>Logout</li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="main_container">
+    <aside id="dashboard_menu" class="sidebar-anim">
+      <button class="menu_btn active" data-view="dashboard">Dashboard</button>
+      <button class="menu_btn" data-view="prayer">Prayer Times</button>
+      <button class="menu_btn" data-view="salahlog">Salah Log</button>
+
+      <button class="menu_btn" data-view="qaza">Qaza Planner</button>
+
+      <button class="menu_btn" data-view="dashboard">Routine Planner</button>
+      <button class="menu_btn" data-view="dashboard">Reports</button>
+      <button class="menu_btn" data-view="dashboard">Knowledge</button>
+      <button class="menu_btn" data-view="dashboard">Settings</button>
+    </aside>
+
+    <section id="content_section">
+      <div id="dashboard_content">
+        <div id="next_prayer" class="iteam_containers card-anim d1">
+          <h3>Next Prayer</h3>
+          <h1>Asr 0:2:15</h1>
+          <h6 class="meta_row">
+            <span>Asr</span>
+            <span class="dot"></span>
+            <span>4:15 PM</span>
+            <span class="dot"></span>
+            <span>Upcoming</span>
+          </h6>
+          <h6>Location, Dhaka, Bangladesh</h6>
         </div>
-    </header>
-    <main id="main_container">
-        <aside id="dashboard_menu">
-            <button>Dashboard</button>
-            <button id="prayerTimesBtn">Prayer Times</button>
-            <button>Salah Log</button>
-            <button>Routine Planner</button>
-            <button>Qaza Planner</button>
-            <button>Reports</button>
-            <button>Knowledge</button>
-        </aside>
-        <section id="content_section">
-            <div id="dashboard_content">
-                <div id="next_prayer" class="iteam_containers">
-                    <h3>Next Prayer</h3>
-                    <h1>Asr 0:2:15</h1> <!-- countdown -->
-                    <h6><span>Asr</span>
-                        <span>4:15</span>
-                        <span>Upcoming</span>
-                    </h6>
-                    <h6>Location,Dhaka,Bangladesh</h6>
-                </div>
-                <div id="summary_container" class="iteam_containers">
-                    <h3>Today's Salah Summary</h3>
-                    <div id="namaj_summary_container">
-                        <ul>
-                            <li><span>FAJR</span><span>Done</span></li>
-                            <li><span>Dhuhr</span><span>Done</span></li>
-                            <li><span>Asr</span><span>Upcoming</span></li>
-                            <li><span>Maghrib</span><span>Upcoming</span></li>
-                            <li><span>Isha</span><span>Upcoming</span></li>
-                            <li><span>Prayed Rakats:</span><span>12/17</span></li>
-                            <li><span>Prayer Missed:</span><span>0</span></li>
-                        </ul>
-                    </div>
-                </div>
-                <div id="quick_action_container" class="iteam_containers">
-                    <h3>Quick actions</h3>
-                    <div>
-                        <button>Log prayer</button>
-                        <button>Update routine</button>
-                        <button>View Qaza list</button>
-                        <button>open reports</button>
-                    </div>
-                </div>
-                <div id="streak_container" class="iteam_containers">
-                    <h3>Streak & Badges</h3>
-                    <h6>Current streak</h6>
-                    <h1>4 days</h1>
-                </div>
-                <div id="weekly_container" class="iteam_containers">
-                    <h3>Weekly Progress</h3>
-                    <div>bar CHart</div>
-                    <p>You prayed all 5 prayers on 3 days this week</p>
-                </div>
-            </div>
-        </section>
-    </main>
-</body>
-<script>
+
+        <div id="summary_container" class="iteam_containers card-anim d2">
+          <h3>Today's Salah Summary</h3>
+          <div id="namaj_summary_container" class="summary_list">
+            <ul>
+              <li><span>Fajr</span><span class="status done">Done</span></li>
+              <li><span>Dhuhr</span><span class="status done">Done</span></li>
+              <li><span>Asr</span><span class="status up">Upcoming</span></li>
+              <li><span>Maghrib</span><span class="status up">Upcoming</span></li>
+              <li><span>Isha</span><span class="status up">Upcoming</span></li>
+
+              <li class="summary_footer">
+                <span>Prayed rakats:</span><span>12 / 17</span>
+              </li>
+              <li class="summary_footer">
+                <span>Missed:</span><span>0</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="quick_action_container" class="iteam_containers card-anim d3">
+          <h3>Quick actions</h3>
+          <div class="chip_grid">
+            <button class="chip_btn">Log 3 prayer</button>
+            <button class="chip_btn">Update routine</button>
+            <button class="chip_btn">View Qaza list</button>
+            <button class="chip_btn">Open reports</button>
+          </div>
+        </div>
+
+        <div id="weekly_container" class="iteam_containers card-anim d4">
+          <h3>Weekly Progress</h3>
+          <div class="miniChart" aria-label="Weekly chart">
+            <span style="height: 14px;"></span>
+            <span style="height: 28px;"></span>
+            <span style="height: 20px;"></span>
+            <span style="height: 42px;"></span>
+            <span style="height: 38px;"></span>
+            <span style="height: 30px;"></span>
+            <span style="height: 26px;"></span>
+          </div>
+          <p>You prayed all 5 prayers on 3 days this week.</p>
+        </div>
+
+        <div id="streak_container" class="iteam_containers card-anim d5">
+          <h3>Streak & Badges</h3>
+          <div class="streak_center">
+            <h6>Current streak:</h6>
+            <h1>4 days</h1>
+          </div>
+
+          <div class="badgeRow">
+            <button class="badgeBtn">Fajr early x days</button>
+            <button class="badgeBtn">Full week complete</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="prayer_content" style="display:none;"></div>
+      <div id="salahlog_content" style="display:none;">
+        <iframe
+          id="salahlog_iframe"
+          title="Daily Salah Log"
+          src=""
+          style="width:100%; height: calc(100vh - 140px); border:0; border-radius:12px;"
+          loading="lazy"
+        ></iframe>
+      </div>
+
+      <div id="qaza_content" style="display:none;">
+        <iframe
+          id="qaza_iframe"
+          title="Qaza Planner"
+          src=""
+          style="width:100%; height: calc(100vh - 140px); border:0; border-radius:12px;"
+          loading="lazy"
+        ></iframe>
+      </div>
+
+    </section>
+  </main>
+
+  <script>
     const toggleProfileOption = () => {
-        const optionBar = document.getElementById('profile_option_container');
-        if (optionBar.style.display === 'block') {
-            optionBar.style.display = 'none';
-        }
-        else {
-            optionBar.style.display = 'block';
+      const optionBar = document.getElementById('profile_option_container');
+      optionBar.style.display = (optionBar.style.display === 'block') ? 'none' : 'block';
+    };
 
+    const dashboardView = document.getElementById('dashboard_content');
+    const prayerView = document.getElementById('prayer_content');
+    const salahView = document.getElementById('salahlog_content');
+    const qazaView = document.getElementById('qaza_content');
+
+    const salahFrame = document.getElementById('salahlog_iframe');
+    const qazaFrame = document.getElementById('qaza_iframe');
+
+    let prayerLoaded = false;
+    let salahLoaded = false;
+    let qazaLoaded = false;
+
+    async function loadPrayerTimes() {
+      if (prayerLoaded) return;
+
+      try {
+        const res = await fetch('./PrayerTime.html');
+        const htmlText = await res.text();
+
+        const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+        const main = doc.querySelector('#prayer_time_page') || doc.querySelector('main.page');
+
+        if (!main) {
+          prayerView.innerHTML = "<p style='padding:16px;'>Could not load PrayerTime content.</p>";
+          prayerLoaded = true;
+          return;
         }
+
+        prayerView.innerHTML = "";
+        prayerView.appendChild(main.cloneNode(true));
+        prayerLoaded = true;
+
+      } catch (e) {
+        prayerView.innerHTML = "<p style='padding:16px;'>Error loading PrayerTime.html</p>";
+      }
     }
-</script>
 
+    function loadSalahLog() {
+      if (salahLoaded) return;
+      salahFrame.src = './daily_log.php';
+      salahLoaded = true;
+    }
+
+    function loadQazaPlanner() {
+      if (qazaLoaded) return;
+      qazaFrame.src = './qaza_planner.php';
+      qazaLoaded = true;
+    }
+
+    async function showView(viewName) {
+      dashboardView.style.display = 'none';
+      prayerView.style.display = 'none';
+      salahView.style.display = 'none';
+      qazaView.style.display = 'none';
+
+      if (viewName === 'prayer') {
+        await loadPrayerTimes();
+        prayerView.style.display = 'block';
+      } else if (viewName === 'salahlog') {
+        loadSalahLog();
+        salahView.style.display = 'block';
+      } else if (viewName === 'qaza') {
+        loadQazaPlanner();
+        qazaView.style.display = 'block';
+      } else {
+        dashboardView.style.display = 'block';
+      }
+    }
+
+    document.querySelectorAll('#dashboard_menu .menu_btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        document.querySelectorAll('#dashboard_menu .menu_btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        await showView(btn.dataset.view || 'dashboard');
+      });
+    });
+  </script>
+</body>
 </html>

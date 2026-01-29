@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prayer Times</title>
 
-  <!-- CSS is inside Pages/Designs folder -->
-  <link rel="stylesheet" href="./Designs/PrayerTime.css?v=1" />
+ <link rel="stylesheet" href="./PrayerTime.css?v=1" />
 </head>
 
 <body>
-  <main class="page">
+  <main class="page" id="prayer_time_page">
     <section class="card">
-      <!-- Top bar -->
       <div class="topbar">
         <h1 class="title">Prayer Times</h1>
 
@@ -28,7 +26,6 @@
 
       <div class="divider"></div>
 
-      <!-- Filters row -->
       <div class="filters">
         <div class="selectBox">
           <select aria-label="Select country">
@@ -53,14 +50,13 @@
         <button class="btn" type="button">Use my location</button>
       </div>
 
-      <!-- Table card -->
       <section class="tableCard">
         <div class="tableHead">
           <h2>Today’s Prayer Schedule</h2>
         </div>
 
         <div class="tableWrap">
-          <table>
+          <table border="1">
             <thead>
               <tr>
                 <th>Prayer</th>
@@ -111,8 +107,8 @@
           </table>
         </div>
 
-        <p class="note">
-          Times are approximate. Please verify with your local mosque if needed.
+        <p class="note"><i><b>
+          Times are approximate. Please verify with your local mosque if needed.</b></i>
         </p>
       </section>
     </section>
