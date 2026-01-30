@@ -1,0 +1,286 @@
+/* Routine Planner (matches PrayerTime theme + rp_ classes) */
+
+:root{
+  --bg: #f5f6f8;
+  --card: #f7fbfc;
+  --border: #7fefef;
+  --text: #0f172a;
+  --muted: #5b6675;
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --radius: 14px;
+  --primary: #3b82f6;
+  --primary2: #2563eb;
+  --busy: #cfd6de;
+  --window: #79d48b;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* content area (marked area) */
+.rp_page{
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  padding: 28px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.rp_shell{
+  width: min(1040px, 100%);
+}
+
+/* header card */
+.rp_headerCard{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+}
+
+.rp_title{
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.rp_sub{
+  margin: 14px 6px 18px;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+/* grid */
+.rp_grid2{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+/* cards */
+.rp_card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+}
+
+.rp_cardTitle{
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.rp_cardTop{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap: 12px;
+}
+
+.rp_hint{
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* form */
+.rp_fieldGroup{ margin-bottom: 14px; }
+
+.rp_lbl{
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.rp_row2{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.rp_inp{
+  width: 100%;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0 14px;
+  font-size: 16px;
+  outline: none;
+  background: #fff;
+  color: var(--text);
+}
+
+.rp_inp:focus{
+  border-color: #02060b;
+}
+
+/* blocks */
+.rp_blocksHeader{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom: 10px;
+}
+
+.rp_addBtn{
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.rp_addBtn:hover{ background:#f8fafc; }
+
+.rp_blocksContainer{
+  display: grid;
+  gap: 10px;
+}
+
+.rp_blockRow{
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr 44px;
+  gap: 10px;
+  align-items: center;
+}
+
+.rp_removeBtn{
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.rp_removeBtn:hover{ background:#fef2f2; }
+
+/* save */
+.rp_primaryBtn{
+  width: 100%;
+  height: 52px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.rp_primaryBtn:hover{ background: var(--primary2); }
+
+/* suggested list */
+.rp_suggestList{ display: grid; gap: 14px; padding-top: 4px; }
+
+.rp_sItem{
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.rp_sItem:last-child{ border-bottom: none; padding-bottom: 0; }
+
+.rp_sTitle{
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.rp_sSub{
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.rp_note{
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* error */
+.rp_error{
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid #fecaca;
+  background: #fff1f2;
+  color: #991b1b;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+/* timeline */
+.rp_timelineCard{ margin-top: 18px; }
+.rp_timeline{ margin-top: 10px; }
+
+.rp_bar{
+  position: relative;
+  height: 18px;
+  border-radius: 6px;
+  background: #ecf0f7;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.rp_seg{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-right: 1px solid rgba(15,23,42,0.12);
+}
+
+.rp_busy{ background: var(--busy); }
+.rp_window{ background: var(--window); }
+
+.rp_timeRow{
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.rp_legend{
+  display: flex;
+  gap: 28px;
+  justify-content: center;
+  margin-top: 14px;
+  color: var(--muted);
+}
+
+.rp_legItem{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rp_swatch{
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+/* responsive */
+@media (max-width: 700px){
+  .rp_grid2{ grid-template-columns: 1fr; }
+  .rp_row2{ grid-template-columns: 1fr; }
+  .rp_blockRow{ grid-template-columns: 1fr; }
+  .rp_title{ font-size: 24px; }
+  .rp_cardTitle{ font-size: 22px; }
+}
