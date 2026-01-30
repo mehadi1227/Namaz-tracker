@@ -21,7 +21,7 @@ function fmtTime(dateObj, tz) {
 }
 
 function getStatus(nowMs, startMs, endMs) {
-    // If you want the screenshot "—" always, just: return { text: "—", cls: "" };
+
     if (nowMs < startMs) return { text: "Upcoming", cls: "status_upcoming" };
     if (nowMs >= startMs && nowMs < endMs) return { text: "Now", cls: "status_now" };
     return { text: "Done", cls: "status_done" };
@@ -29,19 +29,16 @@ function getStatus(nowMs, startMs, endMs) {
 
 function buildScheduleRows(resp) {
     const tbody = document.getElementById("bodyOfPrayerTimeTable");
-    //if (!tbody) return;
 
     const timings = resp.timings || {};
     const tz = resp?.meta?.timezone || resp?.user?.timezone || "";
 
-    // Parse start times as Date objects (ISO8601 strings from your API)
+
     const starts = PRAYERS
         .filter(p => timings[p])
         .map(p => ({ prayer: p, start: new Date(timings[p]) }));
 
-    // End time logic:
-    // - end of each prayer = next prayer start
-    // - end of Isha = Midnight if available, else next day's Fajr
+
     const midnight = timings["Midnight"] ? new Date(timings["Midnight"]) : null;
 
     const nowMs = Date.now();
@@ -52,28 +49,28 @@ function buildScheduleRows(resp) {
         const prayer = starts[i].prayer;
         const start = starts[i].start;
 
-        // Compute end
+
         let end;
         if (i < starts.length - 1) {
             end = starts[i + 1].start;
         } else {
-            // Isha
+
             if (midnight && midnight.getTime() > start.getTime()) {
                 end = midnight;
             } else {
-                // fallback to next day Fajr
+
                 const fajr = starts.find(x => x.prayer === "Fajr");
                 if (fajr) {
                     end = new Date(fajr.start.getTime());
                     end.setDate(end.getDate() + 1);
                 } else {
-                    // last resort: +6 hours
+
                     end = new Date(start.getTime() + 6 * 60 * 60 * 1000);
                 }
             }
         }
 
-        // Jamaat time (start + offset)
+
         const offsetMin = JAMAAT_OFFSET_MIN[prayer] ?? 0;
         const jamaat = new Date(start.getTime() + offsetMin * 60 * 1000);
 
@@ -99,7 +96,7 @@ function loadTodaySchedule() {
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             const resp = JSON.parse(this.responseText);
-            console.log(resp);
+            // console.log(resp);
             buildScheduleRows(resp);
         }
     };
@@ -109,5 +106,105 @@ function loadTodaySchedule() {
 
 loadTodaySchedule();
 
-// Optional: auto-refresh the status badges every minute
-// setInterval(loadTodaySchedule, 60 * 1000);
+// document.getElementById("btnUseLocation").addEventListener("click", useMyLocation);
+// daySelect
+// methodSelect
+// btnUseLocation
+
+function useMyLocation() {
+  const btn = document.getElementById("btnUseLocation");
+  const daySelect = document.getElementById("daySelect");
+  const methodSelect = document.getElementById("methodSelect"); // (your UI says Hanafi/Shafi/Maliki/Hanbali)
+
+  if (!navigator.geolocation) {
+    alert("Geolocation is not supported by this browser.");
+    return;
+  }
+
+  const btnOldText = btn ? btn.textContent : "";
+
+  // UI lock
+  if (btn) {
+    btn.textContent = "Requesting location permission...";
+    btn.disabled = true;
+  }
+  if (daySelect) daySelect.disabled = true;
+  if (methodSelect) methodSelect.disabled = true;
+
+  // Pick Today/Tomorrow
+  const d = new Date();
+  const pick = (daySelect?.value || "Today").toLowerCase();
+  if (pick === "tomorrow") d.setDate(d.getDate() + 1);
+
+  // dd-mm-YYYY (what your PHP endpoint expects)
+  const pad = (n) => String(n).padStart(2, "0");
+  const dateParam = `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()}`;
+
+  // Browser IANA timezone (Asia/Dhaka etc.)
+  const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || "").trim();
+
+  // Map madhab -> AlAdhan "school" param (Asr juristic method)
+  // Only two values exist: 0=Shafi, 1=Hanafi. We'll treat Maliki/Hanbali like Shafi here.
+  const madhab = (methodSelect?.value || "Shafi").toLowerCase();
+  const school = madhab === "hanafi" ? 1 : 0;
+
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+
+      try {
+        const params = new URLSearchParams({
+          lat: String(lat),
+          lng: String(lng),
+          date: dateParam,
+          school: String(school),
+        });
+
+        if (tz) params.set("tz", tz);
+
+        // ✅ change the path if your endpoint filename differs
+        const url = `../api/namazSchedulingEndpoint.php?${params.toString()}`;
+
+        const res = await fetch(url, { headers: { Accept: "application/json" } });
+        const data = await res.json().catch(() => null);
+
+        if (!res.ok || !data || data.ok === false) {
+          throw new Error(data?.error || `Request failed (${res.status})`);
+        }
+
+        // Update UI (use your existing functions)
+        if (typeof SetUpComingNamazTimes === "function") SetUpComingNamazTimes(data.timings);
+        // optional:
+        // if (typeof renderNextPrayer === "function") renderNextPrayer(data.next, data.user);
+
+        // console.log("Prayer API response:", data);
+        buildScheduleRows(data);
+      } catch (e) {
+        console.error(e);
+        alert(e?.message || "Could not load prayer times.");
+      } finally {
+        // UI unlock
+        if (btn) {
+          btn.textContent = btnOldText || "Use my location";
+          btn.disabled = false;
+        }
+        if (daySelect) daySelect.disabled = false;
+        if (methodSelect) methodSelect.disabled = false;
+      }
+    },
+    (err) => {
+      // UI unlock on GPS error
+      if (btn) {
+        btn.textContent = btnOldText || "Use my location";
+        btn.disabled = false;
+      }
+      if (daySelect) daySelect.disabled = false;
+      if (methodSelect) methodSelect.disabled = false;
+
+      alert(err?.message || "Could not get location.");
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+  );
+}
+

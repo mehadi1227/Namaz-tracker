@@ -59,10 +59,10 @@ $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 
             <button class="menu_btn" data-view="qaza">Qaza Planner</button>
 
-            <button class="menu_btn" data-view="dashboard">Routine Planner</button>
-            <button class="menu_btn" data-view="dashboard">Reports</button>
-            <button class="menu_btn" data-view="dashboard">Knowledge</button>
-            <button class="menu_btn" id="testbtn">Settings</button>
+            <button class="menu_btn" >Routine Planner</button>
+            <button class="menu_btn" >Reports</button>
+            <button class="menu_btn" >Knowledge</button>
+            <button class="menu_btn" >Settings</button>
         </aside>
 
         <div class="page-wrapper">
@@ -75,13 +75,13 @@ $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 
                     <div class="date-picker">
                         <label for="log_date">Date:</label>
-                        <input type="date" id="log_date" name="log_date" value="<?= htmlspecialchars($selected_date) ?>">
+                        <input type="date" id="log_date" name="log_date" onchange="GetTodaysLog()" value="<?= htmlspecialchars($selected_date) ?>">
 
                         <input type="hidden" id="prayer_date" name="prayer_date" value="<?= htmlspecialchars($selected_date) ?>">
                     </div>
                 </div>
 
-                <!-- this is what your backend expects -->
+                
                 <input type="hidden" id="prayer_date" name="prayer_date" value="<?= htmlspecialchars($selected_date) ?>">
 
                 <div class="content-grid">

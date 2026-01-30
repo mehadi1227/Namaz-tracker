@@ -61,108 +61,137 @@ class DBconnection
     }
 
     // Helper: bind dynamic params by reference
-private function bindDynamic($stmt, string $types, array &$params): bool
-{
-    $bind = [];
-    $bind[] = $types;
+    private function bindDynamic($stmt, string $types, array &$params): bool
+    {
+        $bind = [];
+        $bind[] = $types;
 
-    foreach ($params as $k => &$p) {
-        $bind[] = &$p; // IMPORTANT: by reference
-    }
-
-    return call_user_func_array([$stmt, 'bind_param'], $bind);
-}
-
-// Return existing row id or null
-public function CheckExistingSalahLog($connection, $tableName, int $userId, string $prayerDate)
-{
-    $sql = "SELECT * FROM `$tableName` WHERE user_id=? AND prayer_date=? LIMIT 1";
-    $stmt = $connection->prepare($sql);
-    if (!$stmt) return null;
-
-    $stmt->bind_param("is", $userId, $prayerDate);
-    $stmt->execute();
-    $res = $stmt->get_result();
-
-    $stmt->close();
-    return $res;
-}
-
-public function InsertNewSalahLog($connection, $tableName, array $prayerLogs, int $userId, string $prayerDate): bool
-{
-    // Base columns always present
-    $columns = ['user_id', 'prayer_date'];
-    $placeholders = ['?', '?'];
-    $types = 'is';
-    $params = [$userId, $prayerDate];
-
-    foreach ($prayerLogs as $key => $value) {
-        $columns[] = $key;
-        $placeholders[] = '?';
-
-        if (str_ends_with($key, '_Status')) {
-            $types .= 's';
-            $params[] = (string)$value;
-        } else {
-            $types .= 'i';
-            $params[] = (int)$value;
+        foreach ($params as $k => &$p) {
+            $bind[] = &$p; // IMPORTANT: by reference
         }
+
+        return call_user_func_array([$stmt, 'bind_param'], $bind);
     }
 
-    $sql = "INSERT INTO `$tableName` (" . implode(', ', $columns) . ")
+    // Return existing row id or null
+    public function CheckExistingSalahLog($connection, $tableName, int $userId, string $prayerDate)
+    {
+        $sql = "SELECT * FROM `$tableName` WHERE user_id=? AND prayer_date=? LIMIT 1";
+        $stmt = $connection->prepare($sql);
+        if (!$stmt) return null;
+
+        $stmt->bind_param("is", $userId, $prayerDate);
+        $stmt->execute();
+        $res = $stmt->get_result();
+
+        $stmt->close();
+        return $res;
+    }
+
+    public function InsertNewSalahLog($connection, $tableName, array $prayerLogs, int $userId, string $prayerDate): bool
+    {
+        // Base columns always present
+        $columns = ['user_id', 'prayer_date'];
+        $placeholders = ['?', '?'];
+        $types = 'is';
+        $params = [$userId, $prayerDate];
+
+        foreach ($prayerLogs as $key => $value) {
+            $columns[] = $key;
+            $placeholders[] = '?';
+
+            if (str_ends_with($key, '_Status')) {
+                $types .= 's';
+                $params[] = (string)$value;
+            } else {
+                $types .= 'i';
+                $params[] = (int)$value;
+            }
+        }
+
+        $sql = "INSERT INTO `$tableName` (" . implode(', ', $columns) . ")
             VALUES (" . implode(', ', $placeholders) . ")";
 
-    $stmt = $connection->prepare($sql);
-    if (!$stmt) return false;
+        $stmt = $connection->prepare($sql);
+        if (!$stmt) return false;
 
-    $this->bindDynamic($stmt, $types, $params);
+        $this->bindDynamic($stmt, $types, $params);
 
-    $ok = $stmt->execute();
-    $stmt->close();
+        $ok = $stmt->execute();
+        $stmt->close();
 
-    return $ok;
-}
-
-public function UpdateExistingSalahLog($connection, $tableName, array $prayerLogs, int $userId, string $prayerDate, int $id): bool
-{
-    if (empty($prayerLogs)) return true; // nothing to update
-
-    $setParts = [];
-    $types = '';
-    $params = [];
-
-    foreach ($prayerLogs as $key => $value) {
-        $setParts[] = "`$key` = ?";
-
-        if (str_ends_with($key, '_Status')) {
-            $types .= 's';
-            $params[] = (string)$value;
-        } else {
-            $types .= 'i';
-            $params[] = (int)$value;
-        }
+        return $ok;
     }
 
-    // WHERE user_id=?, prayer_date=?, id=?
-    $types .= 'isi';
-    $params[] = $userId;
-    $params[] = $prayerDate;
-    $params[] = $id;
+    public function UpdateExistingSalahLog($connection, $tableName, array $prayerLogs, int $userId, string $prayerDate, int $id): bool
+    {
+        if (empty($prayerLogs)) return true; // nothing to update
 
-    $sql = "UPDATE `$tableName`
+        $setParts = [];
+        $types = '';
+        $params = [];
+
+        foreach ($prayerLogs as $key => $value) {
+            $setParts[] = "`$key` = ?";
+
+            if (str_ends_with($key, '_Status')) {
+                $types .= 's';
+                $params[] = (string)$value;
+            } else {
+                $types .= 'i';
+                $params[] = (int)$value;
+            }
+        }
+
+        // WHERE user_id=?, prayer_date=?, id=?
+        $types .= 'isi';
+        $params[] = $userId;
+        $params[] = $prayerDate;
+        $params[] = $id;
+
+        $sql = "UPDATE `$tableName`
             SET " . implode(', ', $setParts) . "
             WHERE user_id = ? AND prayer_date = ? AND id = ?";
 
-    $stmt = $connection->prepare($sql);
-    if (!$stmt) return false;
+        $stmt = $connection->prepare($sql);
+        if (!$stmt) return false;
 
-    $this->bindDynamic($stmt, $types, $params);
+        $this->bindDynamic($stmt, $types, $params);
 
-    $ok = $stmt->execute();
-    $stmt->close();
+        $ok = $stmt->execute();
+        $stmt->close();
 
-    return $ok;
-}
+        return $ok;
+    }
+
+    public function WeeklyActivities($connection, int $userId, string $weekStart, string $weekEnd)
+    {
+        $sql = "SELECT prayer_date,
+               Fajr_Status, Dhuhr_Status, Asr_Status, Maghrib_Status, Isha_Status,
+               Fajr_Fard, Fajr_Sunnah, Fajr_Nafl,
+               Dhuhr_Fard, Dhuhr_Sunnah, Dhuhr_Nafl,
+               Asr_Fard, Asr_Sunnah, Asr_Nafl,
+               Maghrib_Fard, Maghrib_Sunnah, Maghrib_Nafl,
+               Isha_Fard, Isha_Sunnah, Isha_Nafl
+        FROM salah_log
+        WHERE user_id = ?
+          AND prayer_date BETWEEN ? AND ?
+        ORDER BY prayer_date";
+
+        $stmt = $connection->prepare($sql);
+        $stmt->bind_param("iss", $userId, $weekStart, $weekEnd);
+        $stmt->execute();
+        $res = $stmt->get_result();
+
+        // $rows = [];
+        // while ($row = $res->fetch_assoc()) {
+        //     $rows[] = $row;
+        // }
+        $stmt->close();
+
+        // return as JSON
+        return $res;
+    }
 
     public function closeConnection($connection)
     {

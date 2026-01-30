@@ -50,10 +50,10 @@
 
       <button class="menu_btn" data-view="qaza">Qaza Planner</button>
 
-      <button class="menu_btn" data-view="dashboard">Routine Planner</button>
-      <button class="menu_btn" data-view="dashboard">Reports</button>
-      <button class="menu_btn" data-view="dashboard">Knowledge</button>
-      <button class="menu_btn" id="testbtn">Settings</button>
+      <button class="menu_btn" >Routine Planner</button>
+      <button class="menu_btn" >Reports</button>
+      <button class="menu_btn" >Knowledge</button>
+      <button class="menu_btn">Settings</button>
     </aside>
     <div class="page" id="prayer_time_page">
       <section class="card">
@@ -61,10 +61,9 @@
           <h1 class="title">Prayer Times</h1>
 
           <div class="dateSelect">
-            <select aria-label="Select day">
+            <select aria-label="Select day" id="daySelect"> 
               <option selected>Today</option>
               <option>Tomorrow</option>
-              <option>This Week</option>
             </select>
             <span class="chev">▾</span>
           </div>
@@ -73,18 +72,9 @@
         <div class="divider"></div>
 
         <div class="filters">
-          <div class="selectBox">
-            <select aria-label="Select country">
-              <option selected>Bangladesh</option>
-              <option>India</option>
-              <option>Pakistan</option>
-              <option>Saudi Arabia</option>
-            </select>
-            <span class="chev">▾</span>
-          </div>
 
           <div class="selectBox">
-            <select aria-label="Select method">
+            <select aria-label="Select method" id="methodSelect">
               <option selected>Hanafi</option>
               <option>Shafi</option>
               <option>Maliki</option>
@@ -93,7 +83,7 @@
             <span class="chev">▾</span>
           </div>
 
-          <button class="btn" type="button">Use my location</button>
+          <button class="btn" type="button" id="btnUseLocation" onclick="useMyLocation()">Use my location</button>
         </div>
 
         <section class="tableCard">

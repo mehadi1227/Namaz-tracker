@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Auto-detect timezone and put it into hidden input "timezone"
+    
     const detectedTz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').trim();
 
     const tzHidden = document.getElementById('timezone');
@@ -7,13 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (tzHidden && detectedTz) tzHidden.value = detectedTz;
 
-    // If your dropdown contains the detected timezone, auto-select it
+   
     if (tzDisplay && detectedTz) {
         const has = Array.from(tzDisplay.options).some(o => o.value === detectedTz);
         if (has) tzDisplay.value = detectedTz;
     }
 
-    // If user manually selects a timezone from dropdown, copy it into hidden timezone
+    
     if (tzDisplay) {
         tzDisplay.addEventListener('change', () => {
             if (!tzHidden) return;
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Use my location button
+    
     const btnLoc = document.getElementById('btnUseLocation');
     if (btnLoc) btnLoc.addEventListener('click', useMyLocation);
 });
@@ -71,7 +71,7 @@ const CreateUser = (event) => {
     event.preventDefault();
     const form = event.currentTarget;
 
-    // Ensure hidden timezone has *something* before sending
+    
     const tzHidden = document.getElementById('timezone');
     const tzDisplay = document.getElementById('timezone_display');
     if (tzHidden && !tzHidden.value && tzDisplay && tzDisplay.value) {

@@ -60,16 +60,6 @@
     <section id="content_section">
       <div id="dashboard_content">
         <div id="next_prayer" class="iteam_containers card-anim d1">
-          <h3>Next Prayer</h3>
-          <h1>Asr 0:2:15</h1>
-          <h6 class="meta_row">
-            <span>Asr</span>
-            <span class="dot"></span>
-            <span>4:15 PM</span>
-            <span class="dot"></span>
-            <span>Upcoming</span>
-          </h6>
-          <h6>Location, Dhaka, Bangladesh</h6>
         </div>
 
         <div id="summary_container" class="iteam_containers card-anim d2">
@@ -92,28 +82,22 @@
 
         <div id="weekly_container" class="iteam_containers card-anim d4">
           <h3>Weekly Progress</h3>
-          <div class="miniChart" aria-label="Weekly chart">
-            <span style="height: 14px;"></span>
-            <span style="height: 28px;"></span>
-            <span style="height: 20px;"></span>
-            <span style="height: 42px;"></span>
-            <span style="height: 38px;"></span>
-            <span style="height: 30px;"></span>
-            <span style="height: 26px;"></span>
+          <div class="miniChart" aria-label="Weekly chart" id="miniChart">
+           
           </div>
-          <p>You prayed all 5 prayers on 3 days this week.</p>
+          <p id="prayed_five_wakt_this_week"></p>
         </div>
 
         <div id="streak_container" class="iteam_containers card-anim d5">
           <h3>Streak & Badges</h3>
           <div class="streak_center">
             <h6>Current streak:</h6>
-            <h1>4 days</h1>
+            <h1 id="streak_count_id">4 days</h1>
           </div>
 
           <div class="badgeRow">
-            <button class="badgeBtn">Fajr early x days</button>
-            <button class="badgeBtn">Full week complete</button>
+            <span class="badgeBtn" id="fajr_prayer_span_badge">Fajr early x days</span>
+            <span class="badgeBtn" id="full_week_complete_badge">Full week complete</span>
           </div>
         </div>
       </div>

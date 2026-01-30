@@ -25,7 +25,9 @@ const SaveToSalahLog = (event) => {
         if (this.readyState !== 4) return;
 
         if (this.status === 200) {
-            alert("Saved: " + this.responseText);
+            GetTodaysLog();
+            const resp = JSON.parse(this.responseText);
+            alert(resp.message || "Salah log saved successfully.");
         } else {
             alert("Error saving Salah log: " + this.responseText);
         }
@@ -37,7 +39,7 @@ const SaveToSalahLog = (event) => {
 
 function GetTodaysLog()
 {
-    const dateVal = new Date().toISOString().split('T')[0];
+    const dateVal = document.getElementById("log_date")?.value || new Date().toISOString().split('T')[0];
 
     if (!dateVal) {
         return;
@@ -52,7 +54,8 @@ function GetTodaysLog()
             console.log("Retrieved Salah log:", resp);
             PutValuesOfSalahLog(resp);
         } else {
-            alert("Error retrieving Salah log: " + this.responseText);
+            // alert("Error retrieving Salah log: " + this.responseText);
+            PutValuesOfSalahLog(null);
         }
     };
 
@@ -82,7 +85,7 @@ function PutValuesOfSalahLog(log)
                 if(log[key] === 'Missed')
                 {
                     missed +=1;
-                }else if(log[key] ==='on time' || log[key] === 'Late'){
+                }else if(log[key] ==='On time' || log[key] === 'Late'){
                     prayed +=1;
                 }
             })
@@ -91,6 +94,13 @@ function PutValuesOfSalahLog(log)
         totalPrayed.textContent = prayed || '0';
         totalMissed.textContent = missed || '0';
         summaryText.textContent = 'No summary available.';
+        
+        for (const [key, value] of Object.entries(log)) {
+            const input = document.querySelector(`[name="${key}"]`);
+            if (input) {
+                input.value = value;
+            }
+        }
     } else {
         totalPrayed.textContent = '0';
         totalMissed.textContent = '0';
