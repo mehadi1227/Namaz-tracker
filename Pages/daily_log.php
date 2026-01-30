@@ -20,6 +20,7 @@ $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
     <link rel="stylesheet" href="./Designs/AsideMenu.css" />
     <link rel="stylesheet" href="./Designs/Navbar.css" />
     <script src="../api/JS/salaLog.js"></script>
+    <script src="../api/JS/NavbarOption.js" defer></script>
 </head>
 
 <body>
@@ -31,14 +32,11 @@ $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
                 <label>Salah Tracker</label>
             </div>
 
-            <div class="nav_center">
-                Friday, 5 December 2025
+            <div class="nav_center" id="nav_center">
             </div>
 
             <div class="nav_right">
-                <button class="icon_btn" type="button" aria-label="Notifications">N</button>
-                <button class="avatar" type="button" aria-label="User">RA</button>
-                <button class="caret_btn" type="button" onclick="toggleProfileOption()">V</button>
+                <button class="avatar" type="button" aria-label="User" onclick="toggleProfileOption()">RA</button>
             </div>
         </nav>
 
