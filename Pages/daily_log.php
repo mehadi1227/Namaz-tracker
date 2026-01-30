@@ -42,7 +42,7 @@ $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 
         <div id="profile_option_container">
             <ul>
-                <li>Profile</li>
+                <li onclick="window.location.href = 'Profile.php'">Profile</li>
                 <li>Dashboard</li>
                 <li>Logout</li>
             </ul>

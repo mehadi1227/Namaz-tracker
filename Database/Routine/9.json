@@ -1,0 +1,8 @@
+{
+    "sleep_from": "00:20",
+    "sleep_to": "05:20",
+    "work_from": "09:20",
+    "work_to": "18:20",
+    "blocks": [],
+    "updated_at": "2026-01-30T19:20:33+01:00"
+}

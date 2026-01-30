@@ -15,6 +15,7 @@
 
   <!-- Navbar dropdown -->
   <script src="../api/JS/NavbarOption.js" defer></script>
+  <script src="../api/JS/routinePlanner.js" defer></script>
 </head>
 
 <body>
@@ -26,20 +27,18 @@
         <label>Salah Tracker</label>
       </div>
 
-      <div class="nav_center">
+      <div class="nav_center" id="nav_center">
         Friday, 5 December 2025
       </div>
 
       <div class="nav_right">
-        <button class="icon_btn" type="button" aria-label="Notifications">N</button>
-        <button class="avatar" type="button" aria-label="User">RA</button>
-        <button class="caret_btn" type="button" onclick="toggleProfileOption()">V</button>
+        <button class="avatar" type="button" aria-label="User" onclick="toggleProfileOption()">RA</button>
       </div>
     </nav>
 
     <div id="profile_option_container">
       <ul>
-        <li>Profile</li>
+        <li onclick="window.location.href = 'Profile.php'">Profile</li>
         <li>Dashboard</li>
         <li>Logout</li>
       </ul>
@@ -177,265 +176,6 @@
     </div>
   </main>
 
-  <!-- ✅ INLINE JS -->
-  <script>
-    // Fixed prayer windows (you can later replace with real prayer times)
-    const PRAYER_WINDOWS = {
-      Fajr: { start: "05:05", end: "06:15" },
-      Dhuhr: { start: "11:50", end: "14:30" },
-      Asr: { start: "14:30", end: "16:45" },
-      Maghrib: { start: "16:45", end: "17:40" },
-      Isha: { start: "17:40", end: "24:00" },
-    };
-
-    const SLOT_MINUTES = 15; // suggestion slot size
-    const STEP_MINUTES = 5;  // check every 5 minutes
-
-    function $(id) { return document.getElementById(id); }
-
-    function toMin(timeStr) {
-      if (!timeStr) return null;
-      if (timeStr === "24:00") return 1440;
-      const m = /^(\d{1,2}):(\d{2})$/.exec(timeStr.trim());
-      if (!m) return null;
-      const hh = parseInt(m[1], 10);
-      const mm = parseInt(m[2], 10);
-      if (hh < 0 || hh > 24 || mm < 0 || mm > 59) return null;
-      if (hh === 24 && mm !== 0) return null;
-      return hh * 60 + mm;
-    }
-
-    function fmt(min) {
-      min = ((min % 1440) + 1440) % 1440;
-      const hh24 = Math.floor(min / 60);
-      const mm = min % 60;
-      const ampm = hh24 >= 12 ? "PM" : "AM";
-      let hh = hh24 % 12;
-      if (hh === 0) hh = 12;
-      return `${hh}:${String(mm).padStart(2, "0")} ${ampm}`;
-    }
-
-    function normalizeInterval(startMin, endMin) {
-      if (startMin == null || endMin == null) return [];
-      if (startMin === endMin) return [];
-      if (endMin > startMin) return [[startMin, endMin]];
-      // crosses midnight
-      return [[startMin, 1440], [0, endMin]];
-    }
-
-    function overlaps(aStart, aEnd, bStart, bEnd) {
-      return aStart < bEnd && bStart < aEnd;
-    }
-
-    function isBusy(start, end, busyIntervals) {
-      for (const [bs, be] of busyIntervals) {
-        if (overlaps(start, end, bs, be)) return true;
-      }
-      return false;
-    }
-
-    function mergeIntervals(intervals) {
-      if (!intervals.length) return [];
-      const sorted = intervals
-        .map(x => [Math.max(0, x[0]), Math.min(1440, x[1])])
-        .filter(x => x[1] > x[0])
-        .sort((a, b) => a[0] - b[0]);
-
-      const merged = [sorted[0]];
-      for (let i = 1; i < sorted.length; i++) {
-        const [s, e] = sorted[i];
-        const last = merged[merged.length - 1];
-        if (s <= last[1]) last[1] = Math.max(last[1], e);
-        else merged.push([s, e]);
-      }
-      return merged;
-    }
-
-    function findEarliestSlot(winStart, winEnd, busyIntervals) {
-      for (let t = winStart; t + SLOT_MINUTES <= winEnd; t += STEP_MINUTES) {
-        if (!isBusy(t, t + SLOT_MINUTES, busyIntervals)) return t;
-      }
-      return null;
-    }
-
-    function setError(msg) {
-      const box = $("rp_error");
-      if (!msg) {
-        box.style.display = "none";
-        box.textContent = "";
-        return;
-      }
-      box.style.display = "block";
-      box.textContent = msg;
-    }
-
-    function createBlockRow(data = { name: "", from: "", to: "" }) {
-      const row = document.createElement("div");
-      row.className = "rp_blockRow";
-
-      const name = document.createElement("input");
-      name.className = "rp_inp";
-      name.type = "text";
-      name.placeholder = "Block name";
-      name.value = data.name || "";
-
-      const from = document.createElement("input");
-      from.className = "rp_inp";
-      from.type = "time";
-      from.value = data.from || "";
-
-      const to = document.createElement("input");
-      to.className = "rp_inp";
-      to.type = "time";
-      to.value = data.to || "";
-
-      const rm = document.createElement("button");
-      rm.className = "rp_removeBtn";
-      rm.type = "button";
-      rm.textContent = "×";
-      rm.addEventListener("click", () => row.remove());
-
-      row.appendChild(name);
-      row.appendChild(from);
-      row.appendChild(to);
-      row.appendChild(rm);
-
-      row._refs = { name, from, to };
-      return row;
-    }
-
-    function readRoutine() {
-      const sleepFrom = toMin($("sleep_from").value);
-      const sleepTo = toMin($("sleep_to").value);
-      const workFrom = toMin($("work_from").value);
-      const workTo = toMin($("work_to").value);
-
-      let busy = [];
-      busy.push(...normalizeInterval(sleepFrom, sleepTo));
-      busy.push(...normalizeInterval(workFrom, workTo));
-
-      const blocks = [];
-      const container = $("blocks_container");
-
-      for (const row of container.querySelectorAll(".rp_blockRow")) {
-        const { name, from, to } = row._refs || {};
-        const bName = (name?.value || "").trim();
-        const bFrom = toMin(from?.value || "");
-        const bTo = toMin(to?.value || "");
-        blocks.push({ name: bName, from: from?.value || "", to: to?.value || "" });
-        busy.push(...normalizeInterval(bFrom, bTo));
-      }
-
-      busy = mergeIntervals(busy);
-
-      return {
-        sleep_from: $("sleep_from").value || "",
-        sleep_to: $("sleep_to").value || "",
-        work_from: $("work_from").value || "",
-        work_to: $("work_to").value || "",
-        blocks,
-        busy
-      };
-    }
-
-    function renderSuggestions(routine) {
-      const busy = routine.busy;
-
-      const set = (id, text) => { $(id).textContent = text; };
-
-      for (const [prayer, w] of Object.entries(PRAYER_WINDOWS)) {
-        const ws = toMin(w.start);
-        const we = toMin(w.end);
-
-        const slot = findEarliestSlot(ws, we, busy);
-
-        let text = "—";
-        if (slot == null) {
-          text = `No free time between ${fmt(ws)} – ${fmt(we)}`;
-        } else {
-          text = `Suggested at ${fmt(slot)} (within ${fmt(ws)} – ${fmt(we)})`;
-        }
-
-        if (prayer === "Fajr") set("sug_fajr", text);
-        if (prayer === "Dhuhr") set("sug_dhuhr", text);
-        if (prayer === "Asr") set("sug_asr", text);
-        if (prayer === "Maghrib") set("sug_maghrib", text);
-        if (prayer === "Isha") set("sug_isha", text);
-      }
-    }
-
-    function saveToLocal(routine) {
-      localStorage.setItem("routine_planner_v1", JSON.stringify(routine));
-    }
-
-    function loadFromLocal() {
-      try {
-        const raw = localStorage.getItem("routine_planner_v1");
-        if (!raw) return null;
-        const data = JSON.parse(raw);
-        return data && typeof data === "object" ? data : null;
-      } catch {
-        return null;
-      }
-    }
-
-    function applyLoaded(data) {
-      $("sleep_from").value = data.sleep_from || "";
-      $("sleep_to").value = data.sleep_to || "";
-      $("work_from").value = data.work_from || "";
-      $("work_to").value = data.work_to || "";
-
-      const container = $("blocks_container");
-      container.innerHTML = "";
-
-      const blocks = Array.isArray(data.blocks) ? data.blocks : [];
-      if (blocks.length === 0) {
-        container.appendChild(createBlockRow());
-      } else {
-        for (const b of blocks) container.appendChild(createBlockRow(b));
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const container = $("blocks_container");
-
-      // load saved data
-      const loaded = loadFromLocal();
-      if (loaded) applyLoaded(loaded);
-      else container.appendChild(createBlockRow());
-
-      // add block
-      $("add_block_btn").addEventListener("click", () => {
-        container.appendChild(createBlockRow());
-      });
-
-      // save + suggest
-      $("save_routine_btn").addEventListener("click", () => {
-        setError("");
-
-        const routine = readRoutine();
-
-        // validation: if one filled then both
-        const pairs = [
-          ["Sleep", routine.sleep_from, routine.sleep_to],
-          ["Work/Study", routine.work_from, routine.work_to],
-        ];
-
-        for (const [label, a, b] of pairs) {
-          if ((a && !b) || (!a && b)) {
-            setError(`${label} time: please fill both From and To.`);
-            return;
-          }
-        }
-
-        saveToLocal(routine);
-        renderSuggestions(routine);
-      });
-
-      // initial suggestions
-      renderSuggestions(readRoutine());
-    });
-  </script>
 </body>
 
 </html>
