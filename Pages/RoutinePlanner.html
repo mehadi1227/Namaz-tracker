@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Routine Planner</title>
+
+  <!-- ✅ CSS (same folder) -->
+  <link rel="stylesheet" href="./RoutinePlanner.css?v=3" />
+
+  <!-- ✅ Layout same like PrayerTime -->
+  <link rel="stylesheet" href="./Designs/AsideMenu.css" />
+  <link rel="stylesheet" href="./Designs/Navbar.css" />
+
+  <!-- Navbar dropdown -->
+  <script src="../api/JS/NavbarOption.js" defer></script>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <div class="nav_left">
+        <div class="brand_icon" aria-hidden="true"></div>
+        <img class="brand_logo" src="" alt="logo">
+        <label>Salah Tracker</label>
+      </div>
+
+      <div class="nav_center">
+        Friday, 5 December 2025
+      </div>
+
+      <div class="nav_right">
+        <button class="icon_btn" type="button" aria-label="Notifications">N</button>
+        <button class="avatar" type="button" aria-label="User">RA</button>
+        <button class="caret_btn" type="button" onclick="toggleProfileOption()">V</button>
+      </div>
+    </nav>
+
+    <div id="profile_option_container">
+      <ul>
+        <li>Profile</li>
+        <li>Dashboard</li>
+        <li>Logout</li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="main_container">
+    <aside id="dashboard_menu" class="sidebar-anim">
+      <button class="menu_btn"><a href="./Dashboard.html" style="text-decoration:none;">Dashboard</a></button>
+      <button class="menu_btn"><a href="./PrayerTime.html" style="text-decoration:none;">Prayer Times</a></button>
+      <button class="menu_btn"><a href="./daily_log.php" style="text-decoration:none;">Salah Log</a></button>
+      <button class="menu_btn"><a href="./qaza_planner.php" style="text-decoration:none;">Qaza Planner</a></button>
+
+      <button class="menu_btn active"><a href="./RoutinePlanner.html" style="text-decoration:none;">Routine Planner</a></button>
+
+      <button class="menu_btn"><a href="#" style="text-decoration:none;">Reports</a></button>
+      <button class="menu_btn"><a href="#" style="text-decoration:none;">Knowledge</a></button>
+      <button class="menu_btn"><a href="#" style="text-decoration:none;">Settings</a></button>
+    </aside>
+
+    <!-- ✅ Only the marked area content -->
+    <div class="rp_page" id="routine_planner_page">
+      <section class="rp_shell">
+
+        <header class="rp_headerCard">
+          <h1 class="rp_title">Daily Routine Planner</h1>
+        </header>
+
+        <p class="rp_sub">
+          Add your typical day so we can suggest prayer windows.
+        </p>
+
+        <section class="rp_grid2">
+          <!-- Routine Form -->
+          <div class="rp_card">
+            <div class="rp_cardTop">
+              <h2 class="rp_cardTitle">Routine Form</h2>
+              <span class="rp_hint">Use 24h time (e.g. 13:30)</span>
+            </div>
+
+            <div class="rp_fieldGroup">
+              <label class="rp_lbl">Sleep time</label>
+              <div class="rp_row2">
+                <input class="rp_inp" id="sleep_from" type="time" />
+                <input class="rp_inp" id="sleep_to" type="time" />
+              </div>
+            </div>
+
+            <div class="rp_fieldGroup">
+              <label class="rp_lbl">Work / Study time</label>
+              <div class="rp_row2">
+                <input class="rp_inp" id="work_from" type="time" />
+                <input class="rp_inp" id="work_to" type="time" />
+              </div>
+            </div>
+
+            <div class="rp_fieldGroup">
+              <div class="rp_blocksHeader">
+                <label class="rp_lbl" style="margin:0;">Custom Blocks</label>
+                <button class="rp_addBtn" id="add_block_btn" type="button" aria-label="Add block">+</button>
+              </div>
+
+              <div id="blocks_container" class="rp_blocksContainer"></div>
+            </div>
+
+            <div id="rp_error" class="rp_error" style="display:none;"></div>
+
+            <button class="rp_primaryBtn" id="save_routine_btn" type="button">Save routine</button>
+          </div>
+
+          <!-- Suggested prayer times -->
+          <div class="rp_card">
+            <h2 class="rp_cardTitle">Suggested prayer times</h2>
+
+            <div class="rp_suggestList">
+              <div class="rp_sItem">
+                <div class="rp_sTitle">Fajr</div>
+                <div class="rp_sSub" id="sug_fajr">—</div>
+              </div>
+
+              <div class="rp_sItem">
+                <div class="rp_sTitle">Dhuhr</div>
+                <div class="rp_sSub" id="sug_dhuhr">—</div>
+              </div>
+
+              <div class="rp_sItem">
+                <div class="rp_sTitle">Asr</div>
+                <div class="rp_sSub" id="sug_asr">—</div>
+              </div>
+
+              <div class="rp_sItem">
+                <div class="rp_sTitle">Maghrib</div>
+                <div class="rp_sSub" id="sug_maghrib">—</div>
+              </div>
+
+              <div class="rp_sItem">
+                <div class="rp_sTitle">Isha</div>
+                <div class="rp_sSub" id="sug_isha">—</div>
+              </div>
+            </div>
+
+            <p class="rp_note">
+              Suggestion excludes your busy blocks. If no free slot is found, it will show “No free time”.
+            </p>
+          </div>
+        </section>
+
+        <!-- Timeline (visual only) -->
+        <section class="rp_card rp_timelineCard">
+          <h2 class="rp_cardTitle">Timeline</h2>
+          <div class="rp_timeline">
+            <div class="rp_bar">
+              <span class="rp_seg rp_busy" style="left:0%; width:35%;"></span>
+              <span class="rp_seg rp_busy" style="left:35%; width:18%;"></span>
+              <span class="rp_seg rp_window" style="left:53%; width:47%;"></span>
+            </div>
+
+            <div class="rp_timeRow">
+              <span>12 AM</span>
+              <span>12 AM</span>
+            </div>
+
+            <div class="rp_legend">
+              <div class="rp_legItem">
+                <span class="rp_swatch rp_busy"></span><span>Busy time</span>
+              </div>
+              <div class="rp_legItem">
+                <span class="rp_swatch rp_window"></span><span>Prayer window</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- ✅ INLINE JS -->
+  <script>
+    // Fixed prayer windows (you can later replace with real prayer times)
+    const PRAYER_WINDOWS = {
+      Fajr: { start: "05:05", end: "06:15" },
+      Dhuhr: { start: "11:50", end: "14:30" },
+      Asr: { start: "14:30", end: "16:45" },
+      Maghrib: { start: "16:45", end: "17:40" },
+      Isha: { start: "17:40", end: "24:00" },
+    };
+
+    const SLOT_MINUTES = 15; // suggestion slot size
+    const STEP_MINUTES = 5;  // check every 5 minutes
+
+    function $(id) { return document.getElementById(id); }
+
+    function toMin(timeStr) {
+      if (!timeStr) return null;
+      if (timeStr === "24:00") return 1440;
+      const m = /^(\d{1,2}):(\d{2})$/.exec(timeStr.trim());
+      if (!m) return null;
+      const hh = parseInt(m[1], 10);
+      const mm = parseInt(m[2], 10);
+      if (hh < 0 || hh > 24 || mm < 0 || mm > 59) return null;
+      if (hh === 24 && mm !== 0) return null;
+      return hh * 60 + mm;
+    }
+
+    function fmt(min) {
+      min = ((min % 1440) + 1440) % 1440;
+      const hh24 = Math.floor(min / 60);
+      const mm = min % 60;
+      const ampm = hh24 >= 12 ? "PM" : "AM";
+      let hh = hh24 % 12;
+      if (hh === 0) hh = 12;
+      return `${hh}:${String(mm).padStart(2, "0")} ${ampm}`;
+    }
+
+    function normalizeInterval(startMin, endMin) {
+      if (startMin == null || endMin == null) return [];
+      if (startMin === endMin) return [];
+      if (endMin > startMin) return [[startMin, endMin]];
+      // crosses midnight
+      return [[startMin, 1440], [0, endMin]];
+    }
+
+    function overlaps(aStart, aEnd, bStart, bEnd) {
+      return aStart < bEnd && bStart < aEnd;
+    }
+
+    function isBusy(start, end, busyIntervals) {
+      for (const [bs, be] of busyIntervals) {
+        if (overlaps(start, end, bs, be)) return true;
+      }
+      return false;
+    }
+
+    function mergeIntervals(intervals) {
+      if (!intervals.length) return [];
+      const sorted = intervals
+        .map(x => [Math.max(0, x[0]), Math.min(1440, x[1])])
+        .filter(x => x[1] > x[0])
+        .sort((a, b) => a[0] - b[0]);
+
+      const merged = [sorted[0]];
+      for (let i = 1; i < sorted.length; i++) {
+        const [s, e] = sorted[i];
+        const last = merged[merged.length - 1];
+        if (s <= last[1]) last[1] = Math.max(last[1], e);
+        else merged.push([s, e]);
+      }
+      return merged;
+    }
+
+    function findEarliestSlot(winStart, winEnd, busyIntervals) {
+      for (let t = winStart; t + SLOT_MINUTES <= winEnd; t += STEP_MINUTES) {
+        if (!isBusy(t, t + SLOT_MINUTES, busyIntervals)) return t;
+      }
+      return null;
+    }
+
+    function setError(msg) {
+      const box = $("rp_error");
+      if (!msg) {
+        box.style.display = "none";
+        box.textContent = "";
+        return;
+      }
+      box.style.display = "block";
+      box.textContent = msg;
+    }
+
+    function createBlockRow(data = { name: "", from: "", to: "" }) {
+      const row = document.createElement("div");
+      row.className = "rp_blockRow";
+
+      const name = document.createElement("input");
+      name.className = "rp_inp";
+      name.type = "text";
+      name.placeholder = "Block name";
+      name.value = data.name || "";
+
+      const from = document.createElement("input");
+      from.className = "rp_inp";
+      from.type = "time";
+      from.value = data.from || "";
+
+      const to = document.createElement("input");
+      to.className = "rp_inp";
+      to.type = "time";
+      to.value = data.to || "";
+
+      const rm = document.createElement("button");
+      rm.className = "rp_removeBtn";
+      rm.type = "button";
+      rm.textContent = "×";
+      rm.addEventListener("click", () => row.remove());
+
+      row.appendChild(name);
+      row.appendChild(from);
+      row.appendChild(to);
+      row.appendChild(rm);
+
+      row._refs = { name, from, to };
+      return row;
+    }
+
+    function readRoutine() {
+      const sleepFrom = toMin($("sleep_from").value);
+      const sleepTo = toMin($("sleep_to").value);
+      const workFrom = toMin($("work_from").value);
+      const workTo = toMin($("work_to").value);
+
+      let busy = [];
+      busy.push(...normalizeInterval(sleepFrom, sleepTo));
+      busy.push(...normalizeInterval(workFrom, workTo));
+
+      const blocks = [];
+      const container = $("blocks_container");
+
+      for (const row of container.querySelectorAll(".rp_blockRow")) {
+        const { name, from, to } = row._refs || {};
+        const bName = (name?.value || "").trim();
+        const bFrom = toMin(from?.value || "");
+        const bTo = toMin(to?.value || "");
+        blocks.push({ name: bName, from: from?.value || "", to: to?.value || "" });
+        busy.push(...normalizeInterval(bFrom, bTo));
+      }
+
+      busy = mergeIntervals(busy);
+
+      return {
+        sleep_from: $("sleep_from").value || "",
+        sleep_to: $("sleep_to").value || "",
+        work_from: $("work_from").value || "",
+        work_to: $("work_to").value || "",
+        blocks,
+        busy
+      };
+    }
+
+    function renderSuggestions(routine) {
+      const busy = routine.busy;
+
+      const set = (id, text) => { $(id).textContent = text; };
+
+      for (const [prayer, w] of Object.entries(PRAYER_WINDOWS)) {
+        const ws = toMin(w.start);
+        const we = toMin(w.end);
+
+        const slot = findEarliestSlot(ws, we, busy);
+
+        let text = "—";
+        if (slot == null) {
+          text = `No free time between ${fmt(ws)} – ${fmt(we)}`;
+        } else {
+          text = `Suggested at ${fmt(slot)} (within ${fmt(ws)} – ${fmt(we)})`;
+        }
+
+        if (prayer === "Fajr") set("sug_fajr", text);
+        if (prayer === "Dhuhr") set("sug_dhuhr", text);
+        if (prayer === "Asr") set("sug_asr", text);
+        if (prayer === "Maghrib") set("sug_maghrib", text);
+        if (prayer === "Isha") set("sug_isha", text);
+      }
+    }
+
+    function saveToLocal(routine) {
+      localStorage.setItem("routine_planner_v1", JSON.stringify(routine));
+    }
+
+    function loadFromLocal() {
+      try {
+        const raw = localStorage.getItem("routine_planner_v1");
+        if (!raw) return null;
+        const data = JSON.parse(raw);
+        return data && typeof data === "object" ? data : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function applyLoaded(data) {
+      $("sleep_from").value = data.sleep_from || "";
+      $("sleep_to").value = data.sleep_to || "";
+      $("work_from").value = data.work_from || "";
+      $("work_to").value = data.work_to || "";
+
+      const container = $("blocks_container");
+      container.innerHTML = "";
+
+      const blocks = Array.isArray(data.blocks) ? data.blocks : [];
+      if (blocks.length === 0) {
+        container.appendChild(createBlockRow());
+      } else {
+        for (const b of blocks) container.appendChild(createBlockRow(b));
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = $("blocks_container");
+
+      // load saved data
+      const loaded = loadFromLocal();
+      if (loaded) applyLoaded(loaded);
+      else container.appendChild(createBlockRow());
+
+      // add block
+      $("add_block_btn").addEventListener("click", () => {
+        container.appendChild(createBlockRow());
+      });
+
+      // save + suggest
+      $("save_routine_btn").addEventListener("click", () => {
+        setError("");
+
+        const routine = readRoutine();
+
+        // validation: if one filled then both
+        const pairs = [
+          ["Sleep", routine.sleep_from, routine.sleep_to],
+          ["Work/Study", routine.work_from, routine.work_to],
+        ];
+
+        for (const [label, a, b] of pairs) {
+          if ((a && !b) || (!a && b)) {
+            setError(`${label} time: please fill both From and To.`);
+            return;
+          }
+        }
+
+        saveToLocal(routine);
+        renderSuggestions(routine);
+      });
+
+      // initial suggestions
+      renderSuggestions(readRoutine());
+    });
+  </script>
+</body>
+
+</html>
