@@ -57,6 +57,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $_SESSION['timezone'] = $user['timezone'];
                 $_SESSION['location_label'] = $user['location_label'];
 
+                if( isset($_POST['rememberMe']) ) {
+                    // Set cookie for 30 days
+                    setcookie('userid', $user['id'], time() + (30 * 24 * 60 * 60), "/");
+                    setcookie('latitude', $user['latitude'], time() + (30 * 24 * 60 * 60), "/");
+                    setcookie('longitude', $user['longitude'], time() + (30 * 24 * 60 * 60), "/");
+                    setcookie('timezone', $user['timezone'], time() + (30 * 24 * 60 * 60), "/");
+                    setcookie('location_label', $user['location_label'], time() + (30 * 24 * 60 * 60), "/");
+
+                }else
+                {
+                    // Expire the cookie
+                    setcookie('userid', '', time() - 3600, "/");
+                    setcookie('latitude', '', time() - 3600, "/");
+                    setcookie('longitude', '', time() - 3600, "/");
+                    setcookie('timezone', '', time() - 3600, "/");
+                    setcookie('location_label', '', time() - 3600, "/");
+                }
+
                 http_response_code(200);
                 exit;
             } else {

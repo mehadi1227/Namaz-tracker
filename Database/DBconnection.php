@@ -60,20 +60,78 @@ class DBconnection
         return $result;
     }
 
-    // Helper: bind dynamic params by reference
+    public function GetUsersDetails($connection, $tableName, $userId)
+    {
+        $sql = "SELECT * FROM {$tableName} WHERE id=?";
+
+        $stmt = $connection->prepare($sql);
+        if (!$stmt) return 0;
+
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $stmt->close();
+        return $result;
+    }
+
+    public function UpdateUserProfile($connection, $tableName, $userId, $needToUpdate)
+    {
+        $setQuery = '';
+        $fieldNames = [];
+        $fieldValues = [];
+        $dataTypes = '';
+
+        foreach ($needToUpdate as $fieldName => $value) {
+            $modifyField = $fieldName . " = ?";
+            array_push($fieldNames, $modifyField);
+            array_push($fieldValues, $value);
+            $dataTypes .= "s";
+        }
+
+        $setQuery = implode(',', $fieldNames);
+
+        $sql = "UPDATE " . $tableName . " SET " . $setQuery . " WHERE id='" . $userId . "'";
+
+        $stmt = $connection->prepare($sql);
+        $stmt->bind_param($dataTypes, ...$fieldValues);
+        $stmt->execute();
+        $result = $stmt->affected_rows;
+
+        return $result;
+    }
+
+    public function CheckExistingUserEmail($connection, $tableName, $email)
+    {
+        $sql = "SELECT * FROM `$tableName` WHERE email=? LIMIT 1";
+        $stmt = $connection->prepare($sql);
+        if (!$stmt) return null;
+
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $res = $stmt->get_result();
+
+        $stmt->close();
+        if ($res->num_rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private function bindDynamic($stmt, string $types, array &$params): bool
     {
         $bind = [];
         $bind[] = $types;
 
         foreach ($params as $k => &$p) {
-            $bind[] = &$p; // IMPORTANT: by reference
+            $bind[] = &$p;
         }
 
         return call_user_func_array([$stmt, 'bind_param'], $bind);
     }
 
-    // Return existing row id or null
+
     public function CheckExistingSalahLog($connection, $tableName, int $userId, string $prayerDate)
     {
         $sql = "SELECT * FROM `$tableName` WHERE user_id=? AND prayer_date=? LIMIT 1";
