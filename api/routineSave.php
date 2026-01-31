@@ -17,7 +17,6 @@ if (empty($_SESSION['userid'])) {
 
 $userId = (int)$_SESSION['userid'];
 
-// Path: /api/routineSave.php  ->  /Database/routine/{userid}.json
 $dir  = __DIR__ . '/../Database/routine';
 $file = $dir . '/' . $userId . '.json';
 
@@ -29,7 +28,7 @@ if (!is_dir($dir)) {
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
-// ------------------ GET: Load routine ------------------
+
 if ($method === 'GET') {
   if (!file_exists($file)) {
     echo json_encode(['ok' => true, 'exists' => false], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -52,7 +51,7 @@ if ($method === 'GET') {
   exit;
 }
 
-// ------------------ POST: Save routine ------------------
+
 if ($method === 'POST') {
   $raw = file_get_contents('php://input');
   $data = json_decode($raw ?: '', true);
@@ -61,7 +60,7 @@ if ($method === 'POST') {
     json_error('Invalid JSON body.', 422);
   }
 
-  // Validate times: allow "" or HH:MM (24h)
+
   $isTime = function($v): bool {
     if ($v === null) return true;
     $s = trim((string)$v);
@@ -78,7 +77,7 @@ if ($method === 'POST') {
   $work_from  = $get('work_from');
   $work_to    = $get('work_to');
 
-  // If one side exists, require both
+
   $pairCheck = function(string $label, string $a, string $b) use ($isTime): ?string {
     if (($a !== '' && $b === '') || ($a === '' && $b !== '')) return "$label: fill both From and To.";
     if (!$isTime($a)) return "$label: invalid From time.";
@@ -112,7 +111,7 @@ if ($method === 'POST') {
     }
   }
 
-  // Save ONLY user inputs (suggestions are recomputed each page load)
+
   $payload = [
     'sleep_from' => $sleep_from,
     'sleep_to'   => $sleep_to,

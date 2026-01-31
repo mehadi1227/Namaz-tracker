@@ -123,7 +123,7 @@ function useMyLocation() {
 
   const btnOldText = btn ? btn.textContent : "";
 
-  // UI lock
+
   if (btn) {
     btn.textContent = "Requesting location permission...";
     btn.disabled = true;
@@ -131,20 +131,17 @@ function useMyLocation() {
   if (daySelect) daySelect.disabled = true;
   if (methodSelect) methodSelect.disabled = true;
 
-  // Pick Today/Tomorrow
+ 
   const d = new Date();
   const pick = (daySelect?.value || "Today").toLowerCase();
   if (pick === "tomorrow") d.setDate(d.getDate() + 1);
 
-  // dd-mm-YYYY (what your PHP endpoint expects)
+
   const pad = (n) => String(n).padStart(2, "0");
   const dateParam = `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()}`;
 
-  // Browser IANA timezone (Asia/Dhaka etc.)
   const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || "").trim();
 
-  // Map madhab -> AlAdhan "school" param (Asr juristic method)
-  // Only two values exist: 0=Shafi, 1=Hanafi. We'll treat Maliki/Hanbali like Shafi here.
   const madhab = (methodSelect?.value || "Shafi").toLowerCase();
   const school = madhab === "hanafi" ? 1 : 0;
 
@@ -163,8 +160,7 @@ function useMyLocation() {
 
         if (tz) params.set("tz", tz);
 
-        // ✅ change the path if your endpoint filename differs
-        const url = `../api/namazSchedulingEndpoint.php?${params.toString()}`;
+        const url = `../../api/namazSchedulingEndpoint.php?${params.toString()}`;
 
         const res = await fetch(url, { headers: { Accept: "application/json" } });
         const data = await res.json().catch(() => null);
@@ -173,18 +169,15 @@ function useMyLocation() {
           throw new Error(data?.error || `Request failed (${res.status})`);
         }
 
-        // Update UI (use your existing functions)
-        if (typeof SetUpComingNamazTimes === "function") SetUpComingNamazTimes(data.timings);
-        // optional:
-        // if (typeof renderNextPrayer === "function") renderNextPrayer(data.next, data.user);
 
-        // console.log("Prayer API response:", data);
+        if (typeof SetUpComingNamazTimes === "function") SetUpComingNamazTimes(data.timings);
+
+        // console.log("Prayer response:", data);
         buildScheduleRows(data);
       } catch (e) {
         console.error(e);
         alert(e?.message || "Could not load prayer times.");
       } finally {
-        // UI unlock
         if (btn) {
           btn.textContent = btnOldText || "Use my location";
           btn.disabled = false;
@@ -194,7 +187,6 @@ function useMyLocation() {
       }
     },
     (err) => {
-      // UI unlock on GPS error
       if (btn) {
         btn.textContent = btnOldText || "Use my location";
         btn.disabled = false;

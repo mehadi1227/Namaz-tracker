@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-session_start();
+// session_start();
 
 if (isset($_COOKIE['userid']) && !empty($_COOKIE['userid'])) {
 

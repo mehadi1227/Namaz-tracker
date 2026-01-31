@@ -42,7 +42,7 @@ function GetTodaysLog(apiValues) {
     }
   };
 
-  xhttp.open("POST", `../api/retriveFromSalahLog.php`, true);
+  xhttp.open("POST", `../../api/retriveFromSalahLog.php`, true);
   xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   xhttp.send(`prayer_date=${encodeURIComponent(dateVal)}`);
 }

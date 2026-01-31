@@ -1,7 +1,7 @@
 (() => {
 
-  if (window.__routinePlannerLoaded) return;
-  window.__routinePlannerLoaded = true;
+  // if (window.__routinePlannerLoaded) return;
+  // window.__routinePlannerLoaded = true;
 
 
   const ROUTINE_API_URL = "../../api/routineSave.php";         

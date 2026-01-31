@@ -40,7 +40,7 @@ try {
         http_response_code(200);
         echo json_encode($log);
     } else {
-        http_response_code(404);
+        http_response_code(204);
         echo json_encode(["error" => "Enter to save today's salah log"]);
         exit;
     }
