@@ -4,8 +4,8 @@
   window.__routinePlannerLoaded = true;
 
 
-  const ROUTINE_API_URL = "../api/routineSave.php";         
-  const NAMAZ_API_URL   = "../api/namazSchedulingEndpoint.php";
+  const ROUTINE_API_URL = "../../api/routineSave.php";         
+  const NAMAZ_API_URL   = "../../api/namazSchedulingEndpoint.php";
 
   const SLOT_MINUTES = 15; 
   const STEP_MINUTES = 5;  

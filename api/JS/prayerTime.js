@@ -100,7 +100,7 @@ function loadTodaySchedule() {
             buildScheduleRows(resp);
         }
     };
-    xhttp.open("GET", "../api/namazSchedulingEndpoint.php", true);
+    xhttp.open("GET", "../../api/namazSchedulingEndpoint.php", true);
     xhttp.send();
 }
 

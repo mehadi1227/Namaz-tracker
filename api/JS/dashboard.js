@@ -10,13 +10,13 @@ function AtTheBegining() {
     if (this.readyState === 4 && this.status === 200) {
       const resp = JSON.parse(this.responseText);
 
-      // timings: {Fajr:"2026-...+06:00", ...}
+      
       SetUpComingNamazTimes(resp);
       GetTodaysLog(resp)
       // SetTodaysalahSummary(resp.timings);
     }
   };
-  xhttp.open("GET", "../api/namazSchedulingEndpoint.php", true);
+  xhttp.open("GET", "../../api/namazSchedulingEndpoint.php", true);
   xhttp.send();
 }
 
@@ -206,7 +206,7 @@ function RetriveWeeklyActivities() {
       console.log("Error retrieving Weekly Activities: " + this.responseText);
     }
   };
-  xhttp.open("POST", `../api/getWeeklyactivities.php`, true);
+  xhttp.open("POST", `../../api/getWeeklyactivities.php`, true);
   xhttp.send();
 
 }

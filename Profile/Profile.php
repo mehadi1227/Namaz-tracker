@@ -5,19 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
-   <link rel="stylesheet" href="Profile.css">
+    <link rel="stylesheet" href="Profile.css">
 </head>
 
 <body>
 
     <?php
     session_start();
-    require_once '../Database/DBconnection.php';
 
     if (!isset($_SESSION['userid'])) {
-        header('Location: login.php');
+        header('Location: ../Authentication/Login/');
         exit();
     }
+    require_once '../Database/DBconnection.php';
     $conn = new DBconnection();
     $connection = $conn->openConnection();
     $user = $conn->GetUsersDetails($connection, 'users', $_SESSION['userid']);
@@ -85,11 +85,11 @@
     }
     ?>
 
-<div class="back-button">
-    <button  onclick="window.location.href='./Dashboard.html'">
-        << Back to Dashboard
-    </button>
-</div>
+    <div class="back-button">
+        <button onclick="window.location.href='../Home/Dashboard'">
+            << Back to Dashboard
+                </button>
+    </div>
 
     <div class="profile-container">
         <h1>Profile</h1>

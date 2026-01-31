@@ -1,12 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+session_start();
+
+if (isset($_COOKIE['userid']) && !empty($_COOKIE['userid'])) {
+
+    $_SESSION['userid'] = $_COOKIE['userid'];
+    $_SESSION['latitude'] = $_COOKIE['latitude'];
+    $_SESSION['longitude'] = $_COOKIE['longitude'];
+    $_SESSION['timezone'] = $_COOKIE['timezone'];
+    $_SESSION['location_label'] = $_COOKIE['location_label'];
+    header("Location: ../../Home/Dashboard");
+}
+
+if( isset($_SESSION['userid']) && !empty($_SESSION['userid']) ) {
+    header("Location: ../../Home/Dashboard");
+    exit();
+}
+?>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration</title>
-    <link rel="stylesheet" href="Designs/credential.css">
-    <script src="../api/JS/registration.js"></script>
+    <link rel="stylesheet" href="../credential.css">
+    <script src="../../api/JS/registration.js"></script>
 </head>
 
 <body>
@@ -61,7 +79,7 @@
             <input type="submit" name="btnRegister" value="Register">
             <span id="emptyFieldsErr" style="color:red;"></span>
 
-            <label>Already have an account? <a href="Login.php">Login</a></label>
+            <label>Already have an account? <a href="../Login/">Login</a></label>
         </form>
     </div>
 </body>

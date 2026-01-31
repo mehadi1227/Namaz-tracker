@@ -7,7 +7,7 @@ const CheckCredentials = (event) => {
     xhttp.onreadystatechange = function () {
 
         if (this.readyState === 4 && this.status === 200) {
-            window.location.href = './Dashboard.html';
+            window.location.href = '../../Home/Dashboard/';
         }
         else if (this.readyState === 4 && (this.status === 422 || this.status === 401)) {
             const errors = JSON.parse(this.responseText);
@@ -18,7 +18,7 @@ const CheckCredentials = (event) => {
         }
     }
 
-    xhttp.open('post', '../api/login.php', true);
+    xhttp.open('post', '../../api/login.php', true);
     xhttp.send(fd);
 
 }

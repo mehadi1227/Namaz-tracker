@@ -13,3 +13,22 @@ const formattedDate = `${days[date.getDay()]}, ${date.getDate()} ${months[date.g
 
 const navcenter = document.getElementById('nav_center');
 navcenter.textContent = formattedDate;
+
+function LogOut()
+{
+  const xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function () {
+    if (this.readyState !== 4) return;
+
+    if (this.status === 200) {
+      alert("Logged out successfully.");
+      window.location.href = "../../Authentication/Login/";
+    } else {
+      alert("Failed to log out:", this.responseText);
+    }
+  };
+
+  xhttp.open("POST", "../../api/Logout.php", true);
+  xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xhttp.send("logout=true");
+}

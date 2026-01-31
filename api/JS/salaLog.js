@@ -33,7 +33,7 @@ const SaveToSalahLog = (event) => {
         }
     };
 
-    xhttp.open("POST", "../api/saveSalahLog.php", true);
+    xhttp.open("POST", "../../api/saveSalahLog.php", true);
     xhttp.send(fd);
 }
 
@@ -59,7 +59,7 @@ function GetTodaysLog()
         }
     };
 
-    xhttp.open("POST", `../api/retriveFromSalahLog.php`, true);
+    xhttp.open("POST", `../../api/retriveFromSalahLog.php`, true);
     xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhttp.send(`prayer_date=${encodeURIComponent(dateVal)}`);
 }

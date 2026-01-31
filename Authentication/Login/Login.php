@@ -3,27 +3,29 @@
 <?php
 session_start();
 
-if (isset($_COOKIE['userid'])) {
+if (isset($_COOKIE['userid']) && !empty($_COOKIE['userid'])) {
 
     $_SESSION['userid'] = $_COOKIE['userid'];
     $_SESSION['latitude'] = $_COOKIE['latitude'];
     $_SESSION['longitude'] = $_COOKIE['longitude'];
     $_SESSION['timezone'] = $_COOKIE['timezone'];
     $_SESSION['location_label'] = $_COOKIE['location_label'];
-    header("Location: Dashboard.html");
+    header("Location: ../../Home/Dashboard");
 }
 
-if( isset($_SESSION['userid']) ) {
-    header("Location: Dashboard.html");
+if( isset($_SESSION['userid']) && !empty($_SESSION['userid']) ) {
+    header("Location: ../../Home/Dashboard");
+    exit();
 }
+
 ?>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <link rel="stylesheet" href="Designs/credential.css">
-    <script src="../api/JS/login.js"></script>
+    <link rel="stylesheet" href="../credential.css">
+    <script src="../../api/JS/login.js"></script>
 </head>
 
 <body>
@@ -41,7 +43,7 @@ if( isset($_SESSION['userid']) ) {
             </div>
             <input type="submit" name="btnlogin" value="Login">
             <span id="emptyFieldsErr" style="color:red;"></span>
-            <label>Don't have an account? <a href="Registration.php">Create account</a></label>
+            <label>Don't have an account? <a href="../Registration/">Create account</a></label>
         </form>
     </div>
     <script>

@@ -7,10 +7,10 @@
   <title>Prayer Times</title>
 
   <link rel="stylesheet" href="./PrayerTime.css" />
-  <link rel="stylesheet" href="./Designs/AsideMenu.css" />
-  <link rel="stylesheet" href="./Designs/Navbar.css" />
-  <script src="../api/JS/prayerTime.js" defer></script>
-  <script src="../api/JS/NavbarOption.js" defer></script>
+  <link rel="stylesheet" href="../Designs/AsideMenu.css" />
+  <link rel="stylesheet" href="../Designs/Navbar.css" />
+  <script src="../../api/JS/prayerTime.js" defer></script>
+  <script src="../../api/JS/NavbarOption.js" defer></script>
 </head>
 
 <body>
@@ -33,26 +33,23 @@
 
     <div id="profile_option_container">
       <ul>
-        <li onclick="window.location.href = 'Profile.php'">Profile</li>
-        <li>Dashboard</li>
-        <li>Logout</li>
+        <li onclick="window.location.href = '../../Profile'">Profile</li>
+        <li onclick="LogOut()">Logout</li>
       </ul>
     </div>
   </header>
 
   <main id="main_container">
     <aside id="dashboard_menu" class="sidebar-anim">
-      <button class="menu_btn "><a href="./Dashboard.html" style="text-decoration: none;">Dashboard</a> </button>
-      <button class="menu_btn active" ><a href="./PrayerTime.html" style="text-decoration: none;">Prayer Times</a> </button>
-      <button class="menu_btn" ><a href="./daily_log.php" style="text-decoration: none;">Salah Log</a> </button>
-
-      <button class="menu_btn" data-view="qaza">Qaza Planner</button>
-
-      <button class="menu_btn" >Routine Planner</button>
-      <button class="menu_btn" >Reports</button>
-      <button class="menu_btn" >Knowledge</button>
-      <button class="menu_btn">Settings</button>
+      <a class="menu_btn" href="../Dashboard" style="text-decoration: none;">Dashboard</a>
+      <a class="menu_btn active" href="../PrayerTime" style="text-decoration: none;">Prayer Times</a>
+      <a class="menu_btn" href="../SalahLog" style="text-decoration: none;">Salah Log</a>
+      <a class="menu_btn" href="../QazaPlanner" style="text-decoration: none;">Qaza Planner</a>
+      <a class="menu_btn" href="../RoutinePlanner" style="text-decoration: none;">Routine Planner</a>
+      <a class="menu_btn" href="../Reports" style="text-decoration: none;">Reports</a>
+      <a class="menu_btn" href="../Knowledge" style="text-decoration: none;">Knowledge</a>
     </aside>
+
     <div class="page" id="prayer_time_page">
       <section class="card">
         <div class="topbar">

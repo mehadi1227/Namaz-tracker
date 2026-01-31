@@ -240,15 +240,23 @@ class DBconnection
         $stmt->bind_param("iss", $userId, $weekStart, $weekEnd);
         $stmt->execute();
         $res = $stmt->get_result();
-
-        // $rows = [];
-        // while ($row = $res->fetch_assoc()) {
-        //     $rows[] = $row;
-        // }
         $stmt->close();
-
-        // return as JSON
         return $res;
+    }
+
+    public function ReturnAllSalahLogOfUSer($connection, $tableName, $userId)
+    {
+        $sql = "SELECT * FROM `$tableName` WHERE user_id=? ORDER BY prayer_date DESC";
+
+        $stmt = $connection->prepare($sql);
+        if (!$stmt) return 0;
+
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $stmt->close();
+        return $result;
     }
 
     public function closeConnection($connection)

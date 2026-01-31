@@ -84,7 +84,7 @@ const CreateUser = (event) => {
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 201) {
             alert('User created successfully');
-            window.location.href = './Login.php';
+            window.location.href = '../../Authentication/Login/';
         }
         else if (this.readyState === 4 && this.status === 422) {
             const errors = JSON.parse(this.responseText);
@@ -98,7 +98,7 @@ const CreateUser = (event) => {
         }
     }
 
-    xhttp.open('post', '../api/registration.php', true);
+    xhttp.open('post', '../../api/registration.php', true);
     xhttp.send(fd);
 }
 
