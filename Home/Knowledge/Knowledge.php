@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Knowledge Corner</title>
+
+
+  <link rel="stylesheet" href="./Knowledge.css?v=1" />
+  <link rel="stylesheet" href="../Designs/AsideMenu.css" />
+  <link rel="stylesheet" href="../Designs/Navbar.css" />
+
+  <script src="../../api/JS/NavbarOption.js" defer></script>
+</head>
+
+<body>
+
+  <header>
+    <nav>
+      <div class="nav_left">
+        <div class="brand_icon" aria-hidden="true"></div>
+        <img class="brand_logo" src="" alt="logo">
+        <label>Salah Tracker</label>
+      </div>
+
+      <div class="nav_center" id="nav_center">
+
+      </div>
+
+      <div class="nav_right">
+        <button class="avatar" type="button" aria-label="User" onclick="toggleProfileOption()">RA</button>
+      </div>
+    </nav>
+
+    <div id="profile_option_container">
+      <ul>
+        <li onclick="window.location.href = '../../Profile'">Profile</li>
+        <li onclick="LogOut()">Logout</li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="main_container">
+    <aside id="dashboard_menu" class="sidebar-anim">
+      <a class="menu_btn" href="../Dashboard" style="text-decoration: none;">Dashboard</a>
+      <a class="menu_btn " href="../PrayerTime" style="text-decoration: none;">Prayer Times</a>
+      <a class="menu_btn" href="../SalahLog" style="text-decoration: none;">Salah Log</a>
+      <a class="menu_btn" href="../QazaPlanner" style="text-decoration: none;">Qaza Planner</a>
+      <a class="menu_btn" href="../RoutinePlanner" style="text-decoration: none;">Routine Planner</a>
+      <a class="menu_btn" href="../Reports" style="text-decoration: none;">Reports</a>
+      <a class="menu_btn active" href="../Knowledge" style="text-decoration: none;">Knowledge</a>
+    </aside>
+
+
+    <div class="kn_page">
+      <section class="kn_shell">
+
+        <!-- Top header card -->
+        <header class="kn_headerCard">
+          <div class="kn_topRow">
+            <h1 class="kn_title">Knowledge Corner</h1>
+            <div class="kn_searchWrap">
+              <input id="kn_search" class="kn_search" type="search" placeholder="Search (e.g. Wudu, Niyyah, Dua)..." />
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="kn_tabs" role="tablist" aria-label="Knowledge categories">
+            <button class="kn_tab active" data-tab="all" role="tab" aria-selected="true">All</button>
+            <button class="kn_tab" data-tab="salah" role="tab" aria-selected="false">Salah Basics</button>
+            <button class="kn_tab" data-tab="niyyah" role="tab" aria-selected="false">Niyyah</button>
+            <button class="kn_tab" data-tab="duas" role="tab" aria-selected="false">Duas</button>
+            <button class="kn_tab" data-tab="tips" role="tab" aria-selected="false">Tips</button>
+          </div>
+        </header>
+
+
+        <div class="kn_tipBar" id="kn_tipBar" style="display:none;">
+          <div class="kn_tipBarText">Tips are dynamic — click to get a new one.</div>
+          <button class="kn_btn" id="kn_newTipBtn" type="button">New tip</button>
+        </div>
+
+
+        <section class="kn_grid" id="kn_grid"></section>
+
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const ITEMS = [
+
+      {
+        id: "sb-1",
+        cat: "salah",
+        title: "Salah basics (short rules)",
+        summary: "Salah is the daily prayer. It has conditions and pillars you must follow.",
+        contentHtml: `
+          <ul>
+            <li><b>Conditions (before prayer):</b> wudu, clean clothes, clean place, cover awrah, face Qibla, enter prayer time.</li>
+            <li><b>Pillars inside prayer:</b> Takbir, standing (if able), reciting, ruku, sujud, sitting, salam.</li>
+            <li><b>Tip:</b> Focus on calm recitation and correct steps.</li>
+          </ul>
+        `
+      },
+      {
+        id: "sb-2",
+        cat: "salah",
+        title: "Wudu Farz (Fard) — how many & what",
+        summary: "Wudu has 4 Farz (Fard). You must do them correctly.",
+        contentHtml: `
+          <ol>
+            <li>Wash the face (forehead to chin, ear to ear).</li>
+            <li>Wash both arms including elbows.</li>
+            <li>Wipe (masah) at least 1/4 of the head.</li>
+            <li>Wash both feet including ankles.</li>
+          </ol>
+        `
+      },
+      {
+        id: "sb-3",
+        cat: "salah",
+        title: "Ghusl Farz (Fard) — how many & what",
+        summary: "Ghusl has 3 Farz (Fard). Without them, ghusl is not complete.",
+        contentHtml: `
+          <ol>
+            <li>Rinse the mouth properly.</li>
+            <li>Rinse the nose properly.</li>
+            <li>Wash the whole body (no dry spot).</li>
+          </ol>
+        `
+      },
+      {
+        id: "sb-4",
+        cat: "salah",
+        title: "Difference: Farz, Wajib, Sunnah, Nafl",
+        summary: "These terms decide how important an action is in Islam.",
+        contentHtml: `
+          <ul>
+            <li><b>Farz:</b> Must do. Leaving it is a serious sin.</li>
+            <li><b>Wajib:</b> Very important. Leaving it (without excuse) is sinful.</li>
+            <li><b>Sunnah:</b> Prophet’s practice. Doing it gets reward.</li>
+            <li><b>Nafl:</b> Optional. Extra reward.</li>
+          </ul>
+        `
+      },
+
+      // Niyyah
+      {
+        id: "ny-1",
+        cat: "niyyah",
+        title: "Niyyah for Wudu",
+        summary: "Intention is in the heart. You may say it softly too.",
+        contentHtml: `
+          <div class="kn_duaBlock">
+            <div class="kn_ar" dir="rtl">نَوَيْتُ الوُضُوءَ لِرَفْعِ الْحَدَثِ وَاسْتِبَاحَةِ الصَّلَاةِ</div>
+            <div class="kn_en"><b>English:</b> I intend to perform wudu to remove impurity and to be able to pray.</div>
+          </div>
+        `
+      },
+      {
+        id: "ny-2",
+        cat: "niyyah",
+        title: "Niyyah for Ghusl (Farz bath)",
+        summary: "Ghusl intention is for purification. Intention is inside the heart.",
+        contentHtml: `
+          <div class="kn_duaBlock">
+            <div class="kn_ar" dir="rtl">نَوَيْتُ الغُسْلَ لِرَفْعِ الجَنَابَةِ وَالتَّطَهُّرِ</div>
+            <div class="kn_en"><b>English:</b> I intend to do ghusl to remove major impurity and become pure.</div>
+          </div>
+        `
+      },
+      {
+        id: "ny-3",
+        cat: "niyyah",
+        title: "Niyyah for 2 Rakat Farz (example)",
+        summary: "Use this pattern for Fajr Farz / others 2-rakat Farz (example).",
+        contentHtml: `
+          <div class="kn_duaBlock">
+            <div class="kn_ar" dir="rtl">نَوَيْتُ أَنْ أُصَلِّيَ رَكْعَتَيْنِ فَرْضَ ... لِلَّهِ تَعَالَى مُتَوَجِّهًا إِلَى الْكَعْبَةِ</div>
+            <div class="kn_en"><b>English:</b> I intend to pray 2 rakat Farz of (prayer name) for Allah, facing the Kaaba.</div>
+          </div>
+        `
+      },
+      {
+        id: "ny-4",
+        cat: "niyyah",
+        title: "Niyyah for 3 Rakat (Witr / Maghrib Farz pattern)",
+        summary: "Use this pattern for 3 rakat prayers (e.g., Maghrib Farz, Witr).",
+        contentHtml: `
+          <div class="kn_duaBlock">
+            <div class="kn_ar" dir="rtl">نَوَيْتُ أَنْ أُصَلِّيَ ثَلَاثَ رَكَعَاتٍ ... لِلَّهِ تَعَالَى مُتَوَجِّهًا إِلَى الْكَعْبَةِ</div>
+            <div class="kn_en"><b>English:</b> I intend to pray 3 rakat of (prayer) for Allah, facing the Kaaba.</div>
+          </div>
+        `
+      },
+      {
+        id: "ny-5",
+        cat: "niyyah",
+        title: "Niyyah for 4 Rakat Farz (Dhuhr/Asr/Isha Farz pattern)",
+        summary: "Use this pattern for 4 rakat Farz prayers (Dhuhr/Asr/Isha).",
+        contentHtml: `
+          <div class="kn_duaBlock">
+            <div class="kn_ar" dir="rtl">نَوَيْتُ أَنْ أُصَلِّيَ أَرْبَعَ رَكَعَاتٍ فَرْضَ ... لِلَّهِ تَعَالَى مُتَوَجِّهًا إِلَى الْكَعْبَةِ</div>
+            <div class="kn_en"><b>English:</b> I intend to pray 4 rakat Farz of (prayer name) for Allah, facing the Kaaba.</div>
+          </div>
+        `
+      },
+      {
+        id: "ny-6",
+        cat: "niyyah",
+        title: "Niyyah for Sunnah / Nafl / Wajib",
+        summary: "Same idea: just replace Farz with Sunnah/Nafl/Wajib in intention.",
+        contentHtml: `
+          <ul>
+            <li><b>Sunnah:</b> “I intend to pray 2/4 rakat Sunnah of (prayer)…”</li>
+            <li><b>Nafl:</b> “I intend to pray 2 rakat Nafl…”</li>
+            <li><b>Wajib:</b> “I intend to pray Wajib…” (example: Witr)</li>
+          </ul>
+        `
+      },
+
+      // Duas
+      {
+        id: "du-1",
+        cat: "duas",
+        title: "Dua after Wudu",
+        summary: "A common dua after wudu for reward and purity.",
+        contentHtml: `
+          <div class="kn_duaBlock">
+            <div class="kn_ar" dir="rtl">أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللّٰهُ وَحْدَهُ لَا شَرِيكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ</div>
+            <div class="kn_en"><b>English:</b> I bear witness that none has the right to be worshiped except Allah alone and Muhammad is His servant and Messenger.</div>
+          </div>
+        `
+      },
+      {
+        id: "du-2",
+        cat: "duas",
+        title: "Dua before eating",
+        summary: "Say this before you eat.",
+        contentHtml: `
+          <div class="kn_duaBlock">
+            <div class="kn_ar" dir="rtl">بِسْمِ اللّٰهِ</div>
+            <div class="kn_en"><b>English:</b> In the name of Allah.</div>
+          </div>
+        `
+      },
+      {
+        id: "du-3",
+        cat: "duas",
+        title: "Dua after eating",
+        summary: "A simple dua after eating.",
+        contentHtml: `
+          <div class="kn_duaBlock">
+            <div class="kn_ar" dir="rtl">الْحَمْدُ لِلّٰهِ الَّذِي أَطْعَمَنِي هٰذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ</div>
+            <div class="kn_en"><b>English:</b> Praise be to Allah who fed me this and provided it for me without my power.</div>
+          </div>
+        `
+      },
+      {
+        id: "du-4",
+        cat: "duas",
+        title: "Dua before sleeping",
+        summary: "Read before sleeping (short).",
+        contentHtml: `
+          <div class="kn_duaBlock">
+            <div class="kn_ar" dir="rtl">بِاسْمِكَ اللّٰهُمَّ أَمُوتُ وَأَحْيَا</div>
+            <div class="kn_en"><b>English:</b> In Your name, O Allah, I die and I live.</div>
+          </div>
+        `
+      },
+      {
+        id: "du-5",
+        cat: "duas",
+        title: "Dua when waking up",
+        summary: "Read when you wake up.",
+        contentHtml: `
+          <div class="kn_duaBlock">
+            <div class="kn_ar" dir="rtl">الْحَمْدُ لِلّٰهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ</div>
+            <div class="kn_en"><b>English:</b> Praise be to Allah who gave us life after death, and to Him is the return.</div>
+          </div>
+        `
+      },
+    ];
+
+    // Tips: dynamic pool
+    const TIPS = [
+      "Pray Fajr as early as possible and then read 5–10 minutes Qur’an.",
+      "Before Salah, take 1 minute to make quiet dhikr — it improves focus.",
+      "Try to pray in jama’ah at least once a day (Maghrib/Isha is easier).",
+      "After every Salah, do short istighfar: ‘Astaghfirullah’ 3 times.",
+      "Keep your phone away during prayer time to avoid distraction.",
+      "Learn one new dua per week and use it daily.",
+      "Make a small sadaqah regularly — even if it is very small.",
+      "Sleep early to make Fajr easy. Good routine helps worship.",
+      "When you feel lazy, remember: Salah is the first account on the Day of Judgment.",
+      "Read 1 hadith daily and try to apply one small action from it."
+    ];
+
+    // -----------------------------
+    // State
+    // -----------------------------
+    let activeTab = "all";
+    let searchText = "";
+    let tipIndex = null;
+
+    const grid = document.getElementById("kn_grid");
+    const tipBar = document.getElementById("kn_tipBar");
+    const newTipBtn = document.getElementById("kn_newTipBtn");
+    const searchInput = document.getElementById("kn_search");
+
+    function normalize(s) {
+      return (s || "").toLowerCase().trim();
+    }
+
+    function pickNewTipIndex() {
+      const last = parseInt(localStorage.getItem("kn_last_tip") || "-1", 10);
+      if (TIPS.length === 0) return 0;
+      let idx = Math.floor(Math.random() * TIPS.length);
+
+      if (TIPS.length > 1) {
+        while (idx === last) idx = Math.floor(Math.random() * TIPS.length);
+      }
+      localStorage.setItem("kn_last_tip", String(idx));
+      return idx;
+    }
+
+    function buildCard(item) {
+      const el = document.createElement("article");
+      el.className = "kn_card";
+
+      el.innerHTML = `
+        <div class="kn_cardHead">
+          <h3 class="kn_cardTitle">${item.title}</h3>
+          <span class="kn_badge">${badgeText(item.cat)}</span>
+        </div>
+
+        <p class="kn_summary">${item.summary}</p>
+
+        <div class="kn_more" style="display:none;">
+          ${item.contentHtml}
+        </div>
+
+        <button class="kn_readMore" type="button" data-action="toggle">
+          Read more
+        </button>
+      `;
+
+      el.dataset.id = item.id;
+      return el;
+    }
+
+    function buildTipCard(text) {
+      const el = document.createElement("article");
+      el.className = "kn_card kn_tipCard";
+
+      el.innerHTML = `
+        <div class="kn_cardHead">
+          <h3 class="kn_cardTitle">Today's Tip</h3>
+          <span class="kn_badge kn_badgeTip">Tips</span>
+        </div>
+
+        <div class="kn_tipQuote">
+          “${text}”
+        </div>
+
+        <div class="kn_tipSmall">
+          Tip changes every time. Click “New tip” for more.
+        </div>
+      `;
+      el.dataset.tip = "1";
+      return el;
+    }
+
+    function badgeText(cat) {
+      if (cat === "salah") return "Salah Basics";
+      if (cat === "niyyah") return "Niyyah";
+      if (cat === "duas") return "Duas";
+      return "Info";
+    }
+
+    function shouldShowTipBar() {
+      return activeTab === "tips" || activeTab === "all";
+    }
+
+    function render() {
+      grid.innerHTML = "";
+
+      // Tip bar show/hide
+      tipBar.style.display = shouldShowTipBar() ? "flex" : "none";
+
+      // Tips tab = show only tips (dynamic)
+      if (activeTab === "tips") {
+        if (tipIndex == null) tipIndex = pickNewTipIndex();
+        grid.appendChild(buildTipCard(TIPS[tipIndex]));
+
+        // show some extra tips cards (random unique)
+        const pool = [...TIPS.keys()].filter(i => i !== tipIndex);
+        shuffle(pool);
+
+        const extraCount = Math.min(5, pool.length);
+        for (let i = 0; i < extraCount; i++) {
+          const t = TIPS[pool[i]];
+          const it = {
+            id: "tip-" + pool[i],
+            cat: "duas", // not used
+            title: "Tip",
+            summary: t,
+            contentHtml: `<div class="kn_tipQuote">“${t}”</div>`
+          };
+          const card = document.createElement("article");
+          card.className = "kn_card";
+          card.innerHTML = `
+            <div class="kn_cardHead">
+              <h3 class="kn_cardTitle">Tip</h3>
+              <span class="kn_badge kn_badgeTip">Tips</span>
+            </div>
+            <div class="kn_tipQuote">“${t}”</div>
+          `;
+          grid.appendChild(card);
+        }
+        return;
+      }
+
+      // For All tab: show tip card on top
+      if (activeTab === "all") {
+        if (tipIndex == null) tipIndex = pickNewTipIndex();
+        grid.appendChild(buildTipCard(TIPS[tipIndex]));
+      }
+
+      // filter items
+      const filtered = ITEMS.filter(it => {
+        const matchesTab = (activeTab === "all") ? true : it.cat === activeTab;
+        if (!matchesTab) return false;
+
+        if (!searchText) return true;
+
+        const hay = normalize(it.title + " " + it.summary).includes(searchText);
+        return hay;
+      });
+
+      // render
+      filtered.forEach(it => grid.appendChild(buildCard(it)));
+
+      // empty state
+      if (filtered.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "kn_empty";
+        empty.textContent = "No results found for this filter/search.";
+        grid.appendChild(empty);
+      }
+    }
+
+    function setActiveTab(tab) {
+      activeTab = tab;
+
+      document.querySelectorAll(".kn_tab").forEach(btn => {
+        const isActive = btn.dataset.tab === tab;
+        btn.classList.toggle("active", isActive);
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+      });
+
+      render();
+    }
+
+    // Toggle read more (event delegation)
+    grid.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-action='toggle']");
+      if (!btn) return;
+
+      const card = btn.closest(".kn_card");
+      if (!card) return;
+
+      const more = card.querySelector(".kn_more");
+      if (!more) return;
+
+      const isOpen = more.style.display !== "none";
+      more.style.display = isOpen ? "none" : "block";
+      btn.textContent = isOpen ? "Read more" : "Show less";
+    });
+
+    // Tabs click
+    document.querySelectorAll(".kn_tab").forEach(btn => {
+      btn.addEventListener("click", () => {
+        setActiveTab(btn.dataset.tab);
+      });
+    });
+
+    // New tip
+    newTipBtn.addEventListener("click", () => {
+      tipIndex = pickNewTipIndex();
+      render();
+    });
+
+    // Search
+    searchInput.addEventListener("input", (e) => {
+      searchText = normalize(e.target.value);
+      render();
+    });
+
+    // Utils
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // default load
+    document.addEventListener("DOMContentLoaded", () => {
+      setActiveTab("all");
+    });
+  </script>
+
+</body>
+
+</html>
