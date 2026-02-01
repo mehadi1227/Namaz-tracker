@@ -8,10 +8,10 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
     $email    = trim($_POST['email'] ?? '');
     $userPass = (string)($_POST['password'] ?? '');
 
-    // now optional (but recommended)
+
     $timezone = trim($_POST['timezone'] ?? '');
 
-    // optional location fields
+
     $lat = trim($_POST['lat'] ?? '');
     $lng = trim($_POST['lng'] ?? '');
     $locationLabel = trim($_POST['location_label'] ?? '');
@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
     $ERROR = [];
     $proceed = true;
 
-    // Required fields
+
     if (empty($name) || empty($email) || empty($userPass)) {
         http_response_code(422);
 
@@ -32,37 +32,42 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
         exit;
     }
 
-    // If user didn't provide timezone AND didn't provide full coordinates, block (recommended)
+ 
     if ($timezone === '' && ($lat === '' || $lng === '')) {
         $ERROR['timezoneErr'] = 'Select a timezone or click "Use my location".';
         $proceed = false;
     }
 
-    // Name validation: letters/spaces only + length
+
     if (!preg_match("/^[a-zA-Z ]+$/", $name) || strlen($name) < 2 || strlen($name) > 50) {
         $ERROR['nameErr'] = "Invalid Name Format (2 to 50 characters, a-z and spaces)";
         $proceed = false;
     }
 
-    // Email validation
+
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $ERROR['emailErr'] = "Invalid Email Address";
         $proceed = false;
     }
 
-    // Password validation
+
     if (strlen($userPass) < 8 || strlen($userPass) > 32) {
         $ERROR['passwordErr'] = "Password Should be within 8 to 32 characters";
         $proceed = false;
     }
 
-    // Timezone validation (only if provided)
+
     if ($timezone !== '' && !in_array($timezone, timezone_identifiers_list(), true)) {
         $ERROR['timezoneErr'] = "Invalid timezone value";
         $proceed = false;
     }
 
-    // Location validation (optional, but if one exists, both must exist)
+
+    if ($lat === '' || $lng === '') {
+        $ERROR['locationErr'] = "Location is not set ('use my location' was not clicked)";
+        $proceed = false;
+    }
+
     if (($lat !== '' && $lng === '') || ($lat === '' && $lng !== '')) {
         $ERROR['locationErr'] = "Latitude and Longitude must both be provided.";
         $proceed = false;
@@ -112,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
         exit;
 
     } catch (Exception $e) {
-        echo "Database error: " . $e->getMessage();
+        echo $e->getMessage();
         http_response_code(500);
         exit;
     }

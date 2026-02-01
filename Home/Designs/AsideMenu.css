@@ -39,3 +39,39 @@
   color: #0f172a;
  
 }
+
+/* Responsive Design */
+@media (max-width: 1000px) {
+  #main_container {
+    grid-template-columns: 1fr;
+  }
+
+  #dashboard_menu {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .menu_btn {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  #dashboard_menu {
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .menu_btn {
+    padding: 8px 12px;
+    font-size: 13px;
+    flex: 1 1 calc(50% - 6px);
+    min-width: 130px;
+  }
+}

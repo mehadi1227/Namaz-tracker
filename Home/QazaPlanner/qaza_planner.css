@@ -331,11 +331,170 @@ input[type="number"] {
 
 /* responsive */
 
+@media (max-width: 1024px) {
+    .page-wrapper {
+        padding: 24px 16px;
+    }
+
+    .qaza-grid {
+        gap: 20px;
+    }
+}
+
 @media (max-width: 900px) {
     .page-wrapper {
         padding: 16px;
     }
+    
     .qaza-grid {
         grid-template-columns: 1fr;
+    }
+
+    .main-card {
+        padding: 20px 18px 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-wrapper {
+        padding: 12px;
+    }
+
+    .main-card {
+        padding: 18px 14px 20px;
+        border-radius: 14px;
+    }
+
+    .header h1 {
+        font-size: 20px;
+    }
+
+    .disclaimer {
+        font-size: 12px;
+    }
+
+    .card {
+        padding: 16px 18px;
+    }
+
+    .card h2 {
+        font-size: 17px;
+        margin-bottom: 14px;
+    }
+
+    .filters-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .filters-row select,
+    .filter-apply-btn {
+        width: 100%;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .qaza-table {
+        min-width: 600px;
+    }
+
+    .plan-top {
+        gap: 12px;
+    }
+
+    .quick-row {
+        flex-wrap: wrap;
+    }
+
+    .quick-btn {
+        flex: 1 1 calc(50% - 4px);
+        min-width: 100px;
+    }
+
+    .timeline-card h3 {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-wrapper {
+        padding: 8px;
+    }
+
+    .main-card {
+        padding: 14px 10px 16px;
+        border-radius: 12px;
+    }
+
+    .header h1 {
+        font-size: 18px;
+    }
+
+    .card {
+        padding: 14px;
+    }
+
+    .card h2 {
+        font-size: 16px;
+    }
+
+    .small-label {
+        font-size: 13px;
+    }
+
+    select,
+    input[type="number"] {
+        font-size: 13px;
+        padding: 6px 8px;
+    }
+
+    .qaza-table {
+        font-size: 13px;
+    }
+
+    .qaza-table th,
+    .qaza-table td {
+        padding: 8px 6px;
+    }
+
+    .row-apply-btn,
+    .filter-apply-btn,
+    .small-submit {
+        font-size: 11px;
+        padding: 5px 8px;
+    }
+
+    .pending-text {
+        font-size: 14px;
+    }
+
+    .finish-row label,
+    .custom-days label {
+        font-size: 13px;
+    }
+
+    .quick-btn {
+        font-size: 13px;
+        padding: 6px 8px;
+    }
+
+    .plan-main-text {
+        font-size: 18px;
+    }
+
+    .plan-note {
+        font-size: 12px;
+    }
+
+    .timeline-bar {
+        height: 10px;
+    }
+
+    .timeline-times,
+    .timeline-legend {
+        font-size: 12px;
     }
 }

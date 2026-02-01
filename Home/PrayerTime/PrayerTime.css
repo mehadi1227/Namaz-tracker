@@ -181,6 +181,24 @@ tbody tr:last-child td{
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .page {
+    padding: 20px 12px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  .filters {
+    gap: 12px;
+  }
+}
+
 @media (max-width: 820px){
   .filters{
     grid-template-columns: 1fr;
@@ -195,6 +213,113 @@ tbody tr:last-child td{
     font-size: 22px;
   }
   
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 16px 10px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .selectBox,
+  .dateSelect {
+    width: 100%;
+  }
+
+  select {
+    font-size: 15px;
+    padding: 10px 36px 10px 12px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 10px 14px;
+  }
+
+  .tableHead {
+    padding: 14px 14px 10px;
+  }
+
+  .tableHead h2 {
+    font-size: 20px;
+  }
+
+  .tableWrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 600px;
+  }
+
+  thead th,
+  tbody td {
+    padding: 12px 14px;
+  }
+
+  .note {
+    padding: 12px 14px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 12px 8px;
+  }
+
+  .card {
+    padding: 12px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  select {
+    font-size: 14px;
+    padding: 8px 32px 8px 10px;
+  }
+
+  .btn {
+    font-size: 14px;
+    padding: 9px 12px;
+  }
+
+  .tableHead {
+    padding: 12px;
+  }
+
+  .tableHead h2 {
+    font-size: 18px;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  thead th,
+  tbody td {
+    padding: 10px;
+  }
+
+  .note {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
 }
 /* ===== Animations (added only) ===== */
 

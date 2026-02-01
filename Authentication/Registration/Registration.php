@@ -63,11 +63,11 @@ if( isset($_SESSION['userid']) && !empty($_SESSION['userid']) ) {
                 <option value="UTC">(UTC+00:00) UTC</option>
             </select>
 
-            <!-- Actual timezone value that gets submitted (auto-filled by JS) -->
+            
             <input type="hidden" name="timezone" id="timezone" value="">
             <span id="timezoneErr" style="color:red;"></span>
 
-            <!-- Use My Location -->
+            
             <button id="btnUseLocation" type="button">Use my location</button>
             <small id="locationStatus" style="display:block;margin:6px 0;color:#444;"></small>
 

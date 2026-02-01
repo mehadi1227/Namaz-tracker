@@ -101,3 +101,74 @@ header nav div:first-child label {
 #profile_option_container ul li:last-child{
   color: #dc2626;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  header nav {
+    padding: 0.6rem 0.8rem;
+    flex-wrap: wrap;
+  }
+
+  .nav_left {
+    gap: 0.4rem;
+  }
+
+  .brand_icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  header nav div:first-child label {
+    font-size: 14px;
+  }
+
+  .nav_center {
+    font-size: 14px;
+  }
+
+  .nav_right {
+    gap: 0.4rem;
+  }
+
+  .icon_btn,
+  .caret_btn,
+  .avatar {
+    width: 34px;
+    height: 34px;
+    font-size: 0.8rem;
+  }
+
+  #profile_option_container {
+    right: 8px;
+    top: 55px;
+  }
+}
+
+@media (max-width: 500px) {
+  header nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .nav_center {
+    order: 3;
+    width: 100%;
+  }
+
+  .nav_right {
+    order: 2;
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .nav_left {
+    order: 1;
+    width: 100%;
+  }
+
+  #profile_option_container {
+    right: 8px;
+    left: auto;
+  }
+}

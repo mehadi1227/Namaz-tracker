@@ -214,6 +214,20 @@ html, body {
 }
 
 /* Responsive */
+@media (max-width: 1200px) {
+  #dashboard_content {
+    gap: 16px;
+  }
+
+  .iteam_containers {
+    padding: 16px;
+  }
+
+  .iteam_containers h1 {
+    font-size: 2rem;
+  }
+}
+
 @media (max-width: 1000px){
   #main_container{
     grid-template-columns: 1fr;
@@ -235,7 +249,123 @@ html, body {
     grid-row: auto;
     grid-column: auto;
   }
+
+  #content_section {
+    padding: 16px;
+  }
 }
+
+@media (max-width: 768px) {
+  #content_section {
+    padding: 12px;
+  }
+
+  .iteam_containers {
+    padding: 14px;
+  }
+
+  .iteam_containers h3 {
+    font-size: 1rem;
+  }
+
+  .iteam_containers h1 {
+    font-size: 1.8rem;
+  }
+
+  .iteam_containers h6 {
+    font-size: 0.85rem;
+  }
+
+  .chip_grid {
+    gap: 8px;
+  }
+
+  .chip_btn {
+    padding: 9px 10px;
+    font-size: 14px;
+  }
+
+  .miniChart {
+    height: 66px;
+    gap: 10px;
+    padding: 10px 8px;
+  }
+
+  .miniChart span {
+    width: 14px;
+  }
+
+  .badgeRow {
+    gap: 8px;
+  }
+
+  .badgeBtn {
+    padding: 9px 10px;
+    font-size: 0.85rem;
+  }
+
+  .summary_list li {
+    font-size: 0.9rem;
+    padding: 10px 2px;
+  }
+}
+
+@media (max-width: 600px) {
+  #content_section {
+    padding: 10px;
+  }
+
+  .iteam_containers {
+    padding: 12px;
+  }
+
+  .iteam_containers h3 {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+
+  .iteam_containers h1 {
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+  }
+
+  .iteam_containers h6 {
+    font-size: 0.8rem;
+  }
+
+  .meta_row {
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .chip_grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .chip_btn {
+    width: 100%;
+  }
+
+  .miniChart {
+    height: 60px;
+    gap: 8px;
+  }
+
+  .badgeRow {
+    grid-template-columns: 1fr;
+  }
+
+  .summary_list li {
+    font-size: 0.85rem;
+    padding: 9px 0;
+  }
+
+  .streak_center {
+    padding: 6px 0;
+  }
+}
+
 @media (max-width: 500px){
   header nav{
     flex-direction: column;
@@ -250,5 +380,21 @@ html, body {
   }
   .nav_left{
     order: 1;
+  }
+
+  #content_section {
+    padding: 8px;
+  }
+
+  #dashboard_content {
+    gap: 12px;
+  }
+
+  .iteam_containers h1 {
+    font-size: 1.5rem;
+  }
+
+  .iteam_containers h3 {
+    font-size: 0.9rem;
   }
 }

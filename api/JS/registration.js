@@ -91,10 +91,10 @@ const CreateUser = (event) => {
             ErrorShowing(errors);
         }
         else if (this.readyState === 4 && this.status === 500 && (this.responseText.includes("Duplicate entry") && this.responseText.includes("for key 'email'"))) {
-            ErrorShowing({ emailErr: 'This email already exits' });
+            ErrorShowing({ emailErr: 'This email already exists' });
         }
         else if (this.readyState === 4 && this.status === 500) {
-            alert('server is down: ' + this.responseText);
+            alert('Server Error: ' + this.responseText);
         }
     }
 

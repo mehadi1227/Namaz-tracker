@@ -14,7 +14,7 @@ const CheckCredentials = (event) => {
             ErrorShowing(errors);
         }
         else if (this.readyState === 4 && this.status === 500) {
-            alert('server is down: ' + this.responseText);
+            alert('Server Error: ' + this.responseText);
         }
     }
 

@@ -277,10 +277,177 @@ body{
 }
 
 /* responsive */
+@media (max-width: 1024px) {
+  .rp_page {
+    padding: 20px 12px;
+  }
+
+  .rp_grid2 {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .rp_page {
+    padding: 16px 10px;
+  }
+
+  .rp_headerCard,
+  .rp_card {
+    padding: 16px;
+  }
+
+  .rp_title {
+    font-size: 24px;
+  }
+
+  .rp_sub {
+    font-size: 15px;
+  }
+
+  .rp_cardTitle {
+    font-size: 22px;
+  }
+
+  .rp_lbl {
+    font-size: 17px;
+  }
+
+  .rp_inp {
+    height: 42px;
+    font-size: 15px;
+  }
+
+  .rp_addBtn,
+  .rp_removeBtn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .rp_primaryBtn {
+    height: 48px;
+    font-size: 17px;
+  }
+
+  .rp_sTitle {
+    font-size: 17px;
+  }
+
+  .rp_sSub {
+    font-size: 15px;
+  }
+
+  .rp_blockRow {
+    gap: 8px;
+  }
+}
+
 @media (max-width: 700px){
   .rp_grid2{ grid-template-columns: 1fr; }
   .rp_row2{ grid-template-columns: 1fr; }
   .rp_blockRow{ grid-template-columns: 1fr; }
   .rp_title{ font-size: 24px; }
   .rp_cardTitle{ font-size: 22px; }
+
+  .rp_page {
+    padding: 12px 8px;
+  }
+
+  .rp_headerCard,
+  .rp_card {
+    padding: 14px;
+  }
+
+  .rp_title {
+    font-size: 22px;
+  }
+
+  .rp_sub {
+    font-size: 14px;
+    margin: 12px 6px 16px;
+  }
+
+  .rp_cardTitle {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  .rp_lbl {
+    font-size: 16px;
+  }
+
+  .rp_inp {
+    height: 40px;
+    font-size: 14px;
+    padding: 0 12px;
+  }
+
+  .rp_addBtn,
+  .rp_removeBtn {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .rp_blockRow {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .rp_primaryBtn {
+    height: 46px;
+    font-size: 16px;
+  }
+
+  .rp_sTitle {
+    font-size: 16px;
+  }
+
+  .rp_sSub {
+    font-size: 14px;
+  }
+
+  .rp_note,
+  .rp_hint {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rp_page {
+    padding: 10px 6px;
+  }
+
+  .rp_headerCard,
+  .rp_card {
+    padding: 12px;
+  }
+
+  .rp_title {
+    font-size: 20px;
+  }
+
+  .rp_cardTitle {
+    font-size: 18px;
+  }
+
+  .rp_cardTop {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .rp_bar {
+    height: 16px;
+  }
+
+  .rp_timeRow,
+  .rp_legend {
+    font-size: 13px;
+  }
+
+  .rp_legend {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
 }

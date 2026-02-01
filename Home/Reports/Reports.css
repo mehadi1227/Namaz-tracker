@@ -345,6 +345,20 @@ body{
 }
 
 /* responsive */
+@media (max-width: 1024px) {
+  .rpt_page {
+    padding: 20px 12px;
+  }
+
+  .rpt_kpiGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .rpt_chartGrid {
+    gap: 12px;
+  }
+}
+
 @media (max-width: 980px){
   .rpt_kpiGrid{ grid-template-columns: 1fr 1fr; }
   .rpt_chartGrid{ grid-template-columns: 1fr; }
@@ -352,11 +366,154 @@ body{
   .rpt_legend{ justify-items: start; width: min(360px, 100%); }
 }
 
+@media (max-width: 768px) {
+  .rpt_page {
+    padding: 16px 10px;
+  }
+
+  .rpt_headerCard,
+  .rpt_card {
+    padding: 16px;
+  }
+
+  .rpt_title {
+    font-size: 24px;
+  }
+
+  .rpt_filters {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .rpt_selectBox {
+    width: 100%;
+  }
+
+  .rpt_kpiGrid {
+    gap: 12px;
+  }
+
+  .rpt_kpiCard {
+    padding: 14px;
+  }
+
+  .rpt_kpiTitle {
+    font-size: 15px;
+    min-height: 36px;
+  }
+
+  .rpt_kpiValue {
+    font-size: 30px;
+  }
+
+  .rpt_cardTitle {
+    font-size: 20px;
+  }
+
+  .rpt_bars {
+    height: 130px;
+  }
+
+  .rpt_pieWrap {
+    gap: 14px;
+  }
+
+  .rpt_pie {
+    width: 140px;
+    height: 140px;
+  }
+
+  .rpt_tableWrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .rpt_tableWrap table {
+    min-width: 700px;
+  }
+
+  .rpt_tableColsTitle {
+    grid-template-columns: 120px repeat(5, 100px) 60px;
+    font-size: 13px;
+  }
+}
+
 @media (max-width: 560px){
   .rpt_filters{ flex-direction: column; align-items: stretch; }
   .rpt_selectBox{ width: 100%; }
   .rpt_kpiValue{ font-size: 32px; }
   .rpt_tableColsTitle{ grid-template-columns: 140px repeat(5, 110px) 70px; }
+
+  .rpt_page {
+    padding: 12px 8px;
+  }
+
+  .rpt_headerCard,
+  .rpt_card {
+    padding: 14px;
+  }
+
+  .rpt_title {
+    font-size: 22px;
+  }
+
+  .rpt_selectBox select {
+    font-size: 15px;
+    padding: 10px 36px 10px 12px;
+  }
+
+  .rpt_kpiGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .rpt_kpiValue {
+    font-size: 28px;
+  }
+
+  .rpt_cardTitle {
+    font-size: 18px;
+  }
+
+  .rpt_barCol {
+    width: 36px;
+  }
+
+  .rpt_bar {
+    width: 30px;
+  }
+
+  .rpt_lbl {
+    font-size: 12px;
+  }
+
+  .rpt_pie {
+    width: 120px;
+    height: 120px;
+  }
+
+  .rpt_legend {
+    gap: 8px;
+    width: 100%;
+  }
+
+  .rpt_sw {
+    width: 16px;
+    height: 16px;
+  }
+
+  .rpt_tableHead {
+    padding: 14px;
+  }
+
+  .rpt_tableWrap td {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .ic {
+    width: 22px;
+    height: 22px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce){
